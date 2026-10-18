@@ -1,6 +1,6 @@
 # 原子能力明细（按 App 分组）
 
-快照时间：2026-10-19 02:28（UTC+8）　·　共 360 项能力 / 38 个 App
+快照时间：2026-10-19 02:31（UTC+8）　·　共 360 项能力 / 38 个 App
 
 > 入参 / 出参的完整 JSON Schema 见 `data/abilities.json`。
 
@@ -200,39 +200,6 @@
 | `sms_statistics` | 在「短信」中获取短信数量统计，包括总计、收件箱、已发送、草稿箱、待发送、发送失败、未读数量及会话数。 ｜正例： - 短信有多少条 - 我有多少未读短信 - 草稿箱有几条 - 短信概览统计 ｜反例： - 搜索包含验证码的短信 → sms_search - 查今天收到的短信 → sms_search - 查某个号码的短信 … | LOCAL | APP_SIGN |
 | `sms_thread_delete` | 在「短信」中删除短信会话（含该会话内全部短信及 MMS）。phone_number、contact_name 二选一，或设置 delete_all=true 删除全部会话；同时传入多个时按 delete_all > phone_number > contact_name 优先级执行。注意：破坏性操作，删除后通常不可恢复… | LOCAL | APP_SIGN |
 
-## 通用原子能力
-
-`com.stepos.common.ability.proxy`　·　26 项能力　·　提供系统通用能力，应用开启及卸载、文件上传、获取设备及系统信息等
-
-| 能力 | 说明 | 执行 | 鉴权 |
-|---|---|---|---|
-| `batch_file_upload` | 上传本地文件到服务端（批量），适用于只需要发起批量上传、不要求一次性返回全部文件结果或实时进度的场景。 ｜正例： - 上传文件 - 把这些文件传上去 - 批量上传这些文件 ｜反例： - 批量上传文件并一次性返回所有上传结果 → 应走 batch_file_upload_return_all - 批量上传这些文件并实时显… | LOCAL | APP_SIGN |
-| `batch_file_upload_all_progress` | 批量上传本地文件，并通过 progressToken 实时返回上传进度。适用于需要展示上传百分比、监听状态变化或处理单个文件失败原因的场景。 ｜正例： - 上传文件看进度 - 批量上传并监听进度 - 显示上传百分比 ｜反例： - 批量上传这些文件 → 应走 batch_file_upload - 批量上传文件并一次性返… | LOCAL | APP_SIGN |
-| `batch_file_upload_return_all` | 批量上传本地文件，并在全部文件处理完成后一次性返回所有上传结果。适用于只关心最终结果、不需要实时进度的场景。 ｜正例： - 批量上传文件 - 上传一批文件并拿到结果 - 把这些本地文件都上传并返回结果 ｜反例： - 批量上传文件并显示上传进度 → 应走 batch_file_upload_all_progress - … | LOCAL | APP_SIGN |
-| `check_app_installed_by_name` | 通过应用显示名称检查指定应用是否已安装。当前按系统应用列表中的显示名称忽略大小写匹配：优先完全匹配，未命中时按显示名前缀匹配以兼容简称（如“携程”命中“携程旅行”）；仍未命中时返回 false。 ｜正例： - 看看我手机上装没装微信 - 帮我查一下有没有安装淘宝 - 确认一下抖音是不是已安装 ｜反例： - 通过包名检查… | LOCAL | APP_SIGN |
-| `check_app_installed_by_package` | 通过 Android 应用包名检查对应应用是否已安装。包名为空时返回参数错误；包名合法但设备上不存在时返回 false。 ｜正例： - 检查 com.tencent.mm 这个包名装没装 - 查一下包名 com.example.app 的应用有没有安装 - 帮我看看这个 packageName 对应的应用是否已安装 ｜… | LOCAL | APP_SIGN |
-| `common_ability_check_app_permission` | 按应用包名和 Android 权限常量检查应用是否拥有指定权限。permissionName 应使用 android.permission.CAMERA、android.permission.RECORD_AUDIO、android.permission.ACCESS_FINE_LOCATION 等系统权限名；不建议直… | LOCAL | APP_SIGN |
-| `common_ability_clipboard_text` | 获取系统剪贴板中的文本内容。仅用于读取文本类型内容；剪贴板为空、当前内容不是文本或系统限制读取时，按实际读取结果返回空文本或错误信息。 ｜正例： - 剪贴板文字是什么 - 复制的内容是什么 - 读一下剪贴板文字 ｜反例： - 复制这段文字到剪贴板 → 不应走本能力 - 清空剪贴板 → 不应走本能力 | LOCAL | APP_SIGN |
-| `common_ability_get_app_count` | 获取当前手机已安装的第三方应用总个数，不包含系统预装应用。适用于用户只关心第三方应用数量、不需要完整应用列表的场景。 ｜正例： - 装了多少个第三方应用 - 已安装 app 有几个 - 第三方应用数量是多少 ｜反例： - 列出已安装的第三方应用 → 应走 common_ability_get_app_list - 检查… | LOCAL | APP_SIGN |
-| `common_ability_get_app_list` | 获取当前手机已安装的第三方应用列表，返回应用名称和包名等信息。不包含系统预装应用。适用于用户想查看设备上安装了哪些第三方应用的场景。 ｜正例： - 列出已安装的第三方应用 - 看看装了哪些 app - 获取第三方应用列表 ｜反例： - 获取已安装应用数量 → 应走 common_ability_get_app_coun… | LOCAL | APP_SIGN |
-| `common_ability_get_app_permissions` | 按应用包名获取应用的非普通权限使用详情，包括位置、相机、麦克风等敏感权限的授权状态或使用信息。适用于查看指定包名应用的权限列表和权限使用详情。 ｜正例： - 查看这个应用的权限列表 - 这个应用用了哪些权限 - 查看指定包名应用的权限使用详情 ｜反例： - 检查应用是否有某一个权限 → 应走 common_abilit… | LOCAL | APP_SIGN |
-| `common_ability_get_app_versioncode` | 根据 Android 应用包名获取指定已安装应用的 versionCode。包名为空时返回参数错误；应用未安装或查询失败时按实现返回错误或 -1。 ｜正例： - 获取 com.tencent.mm 的 versionCode - 查下指定包名应用的版本号 - 帮我查一下某个应用包名的 versionCode ｜反例： … | LOCAL | APP_SIGN |
-| `common_ability_get_screen_size` | 获取当前手机屏幕的完整物理分辨率，包括屏幕宽度和高度，单位为像素 px。 ｜正例： - 屏幕多大 - 我手机屏幕尺寸是多少 - 屏幕分辨率是多少 - 屏幕宽高是多少 ｜反例： - 调整屏幕分辨率 → 不应走本能力 - 修改屏幕缩放比例 → 不应走本能力 | LOCAL | APP_SIGN |
-| `common_ability_has_face_rec` | 查询当前手机硬件是否支持人脸识别功能。只判断设备能力支持情况，不代表当前已录入人脸或已开启人脸解锁。 ｜正例： - 手机支不支持人脸识别 - 能用刷脸吗 - 支持面部识别吗 - 可以刷脸解锁吗 ｜反例： - 设置人脸解锁 → 不应走本能力 - 录入人脸信息 → 不应走本能力 | LOCAL | APP_SIGN |
-| `common_ability_has_fingerprint` | 查询当前手机硬件是否支持指纹识别功能。只判断设备能力支持情况，不代表当前已录入指纹或已开启指纹解锁。 ｜正例： - 手机有指纹吗 - 支持指纹识别吗 - 能指纹解锁吗 - 指纹功能支持不 ｜反例： - 设置指纹解锁 → 不应走本能力 - 录入新的指纹 → 不应走本能力 | LOCAL | APP_SIGN |
-| `open_app_by_name` | 根据应用显示名称打开应用，可选传入 Activity class name 打开具体 Activity。当前按系统应用列表中的显示名称忽略大小写匹配：优先完全匹配，未命中时按显示名前缀匹配以兼容简称（如“携程”命中“携程旅行”），多个命中时取显示名最短者；未找到应用、无默认启动入口或指定 Activity 启动失败时返… | LOCAL | APP_SIGN |
-| `open_app_by_package` | 根据 Android 应用包名打开应用；仅传 packageName 时启动该应用的默认入口 Activity，同时传 packageName 与 className 时直接启动指定 Activity。适用于用户明确提供包名或需要打开指定包名 Activity 的场景。 ｜正例： - 按包名打开应用 - 启动 com.… | LOCAL | APP_SIGN |
-| `open_url_with_browser` | 打开浏览器应用，并传入 URL 打开具体网页。url 必须以 http:// 或 https:// 开头；不支持缺少协议的地址、file:// 或本地路径。 ｜正例： - 用浏览器打开 https://www.baidu.com/ - 打开这个网页链接 - 帮我在浏览器里打开 URL ｜反例： - 打开浏览器应用 → … | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_alipay_life_service` | 支付宝「服务直达」原子能力入口 —— 覆盖智跃星辰服务直达 P0 场景，让用户在**支付宝**内 完成以下明确范围的生活服务。 ## 高频强支持意图（命中即强路由到本能力，勿让给地图/POI/外卖等其它 agent） 以下两类是高频核心场景，**只要 query 命中（含出现在复合 query 的任一子句里）就必须强路… | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_alipay_mcp_service` | 支付宝「对话内闭环」原子能力入口 —— 支付宝下发卡片，**卡片直接渲染在助手对话内、全程不跳转 支付宝**，用户在卡片上选规格 / 确认订单后由调用方回传，形成「推荐 → 下单 → 履约·核销状态查询」 的多轮闭环。 ## 优先级：本能力最高，命中即强路由 本能力覆盖的场景，与支付宝 xUI 服务执行（`proxy_… | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_alipay_xui_service` | 支付宝 xUI「服务执行」原子能力入口 ｜返回： 返回 [AlipayXuiServiceResult]：`code=0`（且 `_meta.metas` 中 `executionState=COMPLETED`）为执行成功； 10001/10002/10003/10004 入参非法（10004 为缺少有效 `para… | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_capcut_creation` | 剪映（CapCut）AI 创作原子能力入口 —— 让用户用一句话，由**剪映**创作 Agent 完成视频 / 图片 / 音乐等短视频创作，并把成片 / 草稿产物回传。命中以下创作意图时云端应路由到本能力，由剪映侧 创作 Agent 完成精准的创作模式判定与素材编排，工具层负责与剪映 App 建立会话、上传本地素材、 … | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_wechat_voice_control` | 微信语音控制原子能力。Amoo 将用户原始语音以 16kHz/单声道/PCM16 传入，由微信完成联系人识别、 消息内容理解、确认 UI 和消息/音视频电话执行。本能力按 contextId 维持多轮 OVC Session；返回的 content 应由 Amoo 使用 TTS 播报。只适用于发微信消息、微信语音电话和… | LOCAL | APP_SIGN |
-| `show_notify_by_info` | 根据传入的标题、内容、PendingIntent 和图标生成并显示一条通知。该能力是底层通知展示接口，适用于系统服务、上层应用或后台任务主动展示自定义通知，不适合作为普通用户自然语言直接触发的能力。 ｜正例： - 系统服务根据标题、内容和跳转 intent 展示通知 - 后台任务完成后展示一条自定义通知 - 上层应用传… | LOCAL | APP_SIGN |
-| `show_widget_by_package_class` | 根据指定 packageName 和 Widget provider className 展示对应小组件。该能力要求明确传入小组件所属应用包名和完整类名，不负责随机选择小组件。 ｜正例： - 根据指定包名和类名展示小组件 - 展示 com.example.app 的指定 Widget - 按 Widget provid… | LOCAL | APP_SIGN |
-| `start_vibration` | 立即让设备按指定时长进行一次震动，适用于即时触觉提示。重复调用会重新提交震动请求；不创建未来的定时提醒、不循环震动，也不修改系统的来电或通知震动设置。成功返回「已提交震动请求」及采用的时长和强度，不等待震动结束；到期由系统停止，也可调用 stop_vibration 提前取消。返回成功仅表示请求已提交，实际震动仍受硬件… | LOCAL | APP_SIGN |
-| `stop_speak_text` | 停止本应用当前的语音播报或朗读（由 speak_text 发起），支持跨会话停止。当前会话无需有 speak_text 的调用历史：即使播报由其他会话发起，或当前上下文无法确认是否有播报，只要用户明确要求停止播报或朗读，就应直接调用本工具，无需先查询播放状态，也无需追问原会话。本工具会取消当前合成任务并清理待播音频。只… | LOCAL | APP_SIGN |
-
 ## 文件管理
 
 `com.stepos.filemanager`　·　26 项能力　·　手机文件查询及管理
@@ -265,6 +232,39 @@
 | `filemanager_recovery_garbage_file` | 根据回收站文件真实路径恢复回收站中的单个文件。 # workflow 必须先调用 filemanager_get_garbage_file_list 获取 garbagePath，再传入本接口；批量或全部恢复请使用 filemanager_recovery_garbage_files。 ｜正例： - 把回收站里的这个文… | LOCAL | APP_SIGN |
 | `filemanager_recovery_garbage_files` | 批量恢复文件管理回收站中的文件，支持按 garbagePath 列表、originalPath 前缀或全部恢复。 # workflow 1. 先调用 filemanager_get_garbage_file_list 获取回收站列表。 2. 全部恢复：restoreAll=true。 3. 恢复指定目录（如 Downl… | LOCAL | APP_SIGN |
 | `filemanager_search_file` | 在文件管理中根据关键词搜索或查询文件、文件夹。 ｜正例： - 帮我搜索一下文件名里有合同的文件 - 查找名字里有照片的文件夹 - 在文件管理里搜一下包含报告的文件 ｜反例： - 查一下手机里的 apk 文件列表 → 应走 filemanager_get_apk_file_list ｜返回： 返回 JSON 数组，每项包… | LOCAL | APP_SIGN |
+
+## 通用原子能力
+
+`com.stepos.common.ability.proxy`　·　26 项能力　·　提供系统通用能力，应用开启及卸载、文件上传、获取设备及系统信息等
+
+| 能力 | 说明 | 执行 | 鉴权 |
+|---|---|---|---|
+| `batch_file_upload` | 上传本地文件到服务端（批量），适用于只需要发起批量上传、不要求一次性返回全部文件结果或实时进度的场景。 ｜正例： - 上传文件 - 把这些文件传上去 - 批量上传这些文件 ｜反例： - 批量上传文件并一次性返回所有上传结果 → 应走 batch_file_upload_return_all - 批量上传这些文件并实时显… | LOCAL | APP_SIGN |
+| `batch_file_upload_all_progress` | 批量上传本地文件，并通过 progressToken 实时返回上传进度。适用于需要展示上传百分比、监听状态变化或处理单个文件失败原因的场景。 ｜正例： - 上传文件看进度 - 批量上传并监听进度 - 显示上传百分比 ｜反例： - 批量上传这些文件 → 应走 batch_file_upload - 批量上传文件并一次性返… | LOCAL | APP_SIGN |
+| `batch_file_upload_return_all` | 批量上传本地文件，并在全部文件处理完成后一次性返回所有上传结果。适用于只关心最终结果、不需要实时进度的场景。 ｜正例： - 批量上传文件 - 上传一批文件并拿到结果 - 把这些本地文件都上传并返回结果 ｜反例： - 批量上传文件并显示上传进度 → 应走 batch_file_upload_all_progress - … | LOCAL | APP_SIGN |
+| `check_app_installed_by_name` | 通过应用显示名称检查指定应用是否已安装。当前按系统应用列表中的显示名称忽略大小写匹配：优先完全匹配，未命中时按显示名前缀匹配以兼容简称（如“携程”命中“携程旅行”）；仍未命中时返回 false。 ｜正例： - 看看我手机上装没装微信 - 帮我查一下有没有安装淘宝 - 确认一下抖音是不是已安装 ｜反例： - 通过包名检查… | LOCAL | APP_SIGN |
+| `check_app_installed_by_package` | 通过 Android 应用包名检查对应应用是否已安装。包名为空时返回参数错误；包名合法但设备上不存在时返回 false。 ｜正例： - 检查 com.tencent.mm 这个包名装没装 - 查一下包名 com.example.app 的应用有没有安装 - 帮我看看这个 packageName 对应的应用是否已安装 ｜… | LOCAL | APP_SIGN |
+| `common_ability_check_app_permission` | 按应用包名和 Android 权限常量检查应用是否拥有指定权限。permissionName 应使用 android.permission.CAMERA、android.permission.RECORD_AUDIO、android.permission.ACCESS_FINE_LOCATION 等系统权限名；不建议直… | LOCAL | APP_SIGN |
+| `common_ability_clipboard_text` | 获取系统剪贴板中的文本内容。仅用于读取文本类型内容；剪贴板为空、当前内容不是文本或系统限制读取时，按实际读取结果返回空文本或错误信息。 ｜正例： - 剪贴板文字是什么 - 复制的内容是什么 - 读一下剪贴板文字 ｜反例： - 复制这段文字到剪贴板 → 不应走本能力 - 清空剪贴板 → 不应走本能力 | LOCAL | APP_SIGN |
+| `common_ability_get_app_count` | 获取当前手机已安装的第三方应用总个数，不包含系统预装应用。适用于用户只关心第三方应用数量、不需要完整应用列表的场景。 ｜正例： - 装了多少个第三方应用 - 已安装 app 有几个 - 第三方应用数量是多少 ｜反例： - 列出已安装的第三方应用 → 应走 common_ability_get_app_list - 检查… | LOCAL | APP_SIGN |
+| `common_ability_get_app_list` | 获取当前手机已安装的第三方应用列表，返回应用名称和包名等信息。不包含系统预装应用。适用于用户想查看设备上安装了哪些第三方应用的场景。 ｜正例： - 列出已安装的第三方应用 - 看看装了哪些 app - 获取第三方应用列表 ｜反例： - 获取已安装应用数量 → 应走 common_ability_get_app_coun… | LOCAL | APP_SIGN |
+| `common_ability_get_app_permissions` | 按应用包名获取应用的非普通权限使用详情，包括位置、相机、麦克风等敏感权限的授权状态或使用信息。适用于查看指定包名应用的权限列表和权限使用详情。 ｜正例： - 查看这个应用的权限列表 - 这个应用用了哪些权限 - 查看指定包名应用的权限使用详情 ｜反例： - 检查应用是否有某一个权限 → 应走 common_abilit… | LOCAL | APP_SIGN |
+| `common_ability_get_app_versioncode` | 根据 Android 应用包名获取指定已安装应用的 versionCode。包名为空时返回参数错误；应用未安装或查询失败时按实现返回错误或 -1。 ｜正例： - 获取 com.tencent.mm 的 versionCode - 查下指定包名应用的版本号 - 帮我查一下某个应用包名的 versionCode ｜反例： … | LOCAL | APP_SIGN |
+| `common_ability_get_screen_size` | 获取当前手机屏幕的完整物理分辨率，包括屏幕宽度和高度，单位为像素 px。 ｜正例： - 屏幕多大 - 我手机屏幕尺寸是多少 - 屏幕分辨率是多少 - 屏幕宽高是多少 ｜反例： - 调整屏幕分辨率 → 不应走本能力 - 修改屏幕缩放比例 → 不应走本能力 | LOCAL | APP_SIGN |
+| `common_ability_has_face_rec` | 查询当前手机硬件是否支持人脸识别功能。只判断设备能力支持情况，不代表当前已录入人脸或已开启人脸解锁。 ｜正例： - 手机支不支持人脸识别 - 能用刷脸吗 - 支持面部识别吗 - 可以刷脸解锁吗 ｜反例： - 设置人脸解锁 → 不应走本能力 - 录入人脸信息 → 不应走本能力 | LOCAL | APP_SIGN |
+| `common_ability_has_fingerprint` | 查询当前手机硬件是否支持指纹识别功能。只判断设备能力支持情况，不代表当前已录入指纹或已开启指纹解锁。 ｜正例： - 手机有指纹吗 - 支持指纹识别吗 - 能指纹解锁吗 - 指纹功能支持不 ｜反例： - 设置指纹解锁 → 不应走本能力 - 录入新的指纹 → 不应走本能力 | LOCAL | APP_SIGN |
+| `open_app_by_name` | 根据应用显示名称打开应用，可选传入 Activity class name 打开具体 Activity。当前按系统应用列表中的显示名称忽略大小写匹配：优先完全匹配，未命中时按显示名前缀匹配以兼容简称（如“携程”命中“携程旅行”），多个命中时取显示名最短者；未找到应用、无默认启动入口或指定 Activity 启动失败时返… | LOCAL | APP_SIGN |
+| `open_app_by_package` | 根据 Android 应用包名打开应用；仅传 packageName 时启动该应用的默认入口 Activity，同时传 packageName 与 className 时直接启动指定 Activity。适用于用户明确提供包名或需要打开指定包名 Activity 的场景。 ｜正例： - 按包名打开应用 - 启动 com.… | LOCAL | APP_SIGN |
+| `open_url_with_browser` | 打开浏览器应用，并传入 URL 打开具体网页。url 必须以 http:// 或 https:// 开头；不支持缺少协议的地址、file:// 或本地路径。 ｜正例： - 用浏览器打开 https://www.baidu.com/ - 打开这个网页链接 - 帮我在浏览器里打开 URL ｜反例： - 打开浏览器应用 → … | LOCAL | APP_SIGN |
+| `proxy_third_party_ability_alipay_life_service` | 支付宝「服务直达」原子能力入口 —— 覆盖智跃星辰服务直达 P0 场景，让用户在**支付宝**内 完成以下明确范围的生活服务。 ## 高频强支持意图（命中即强路由到本能力，勿让给地图/POI/外卖等其它 agent） 以下两类是高频核心场景，**只要 query 命中（含出现在复合 query 的任一子句里）就必须强路… | LOCAL | APP_SIGN |
+| `proxy_third_party_ability_alipay_mcp_service` | 支付宝「对话内闭环」原子能力入口 —— 支付宝下发卡片，**卡片直接渲染在助手对话内、全程不跳转 支付宝**，用户在卡片上选规格 / 确认订单后由调用方回传，形成「推荐 → 下单 → 履约·核销状态查询」 的多轮闭环。 ## 优先级：本能力最高，命中即强路由 本能力覆盖的场景，与支付宝 xUI 服务执行（`proxy_… | LOCAL | APP_SIGN |
+| `proxy_third_party_ability_alipay_xui_service` | 支付宝 xUI「服务执行」原子能力入口 ｜返回： 返回 [AlipayXuiServiceResult]：`code=0`（且 `_meta.metas` 中 `executionState=COMPLETED`）为执行成功； 10001/10002/10003/10004 入参非法（10004 为缺少有效 `para… | LOCAL | APP_SIGN |
+| `proxy_third_party_ability_capcut_creation` | 剪映（CapCut）AI 创作原子能力入口 —— 让用户用一句话，由**剪映**创作 Agent 完成视频 / 图片 / 音乐等短视频创作，并把成片 / 草稿产物回传。命中以下创作意图时云端应路由到本能力，由剪映侧 创作 Agent 完成精准的创作模式判定与素材编排，工具层负责与剪映 App 建立会话、上传本地素材、 … | LOCAL | APP_SIGN |
+| `proxy_third_party_ability_wechat_voice_control` | 微信语音控制原子能力。Amoo 将用户原始语音以 16kHz/单声道/PCM16 传入，由微信完成联系人识别、 消息内容理解、确认 UI 和消息/音视频电话执行。本能力按 contextId 维持多轮 OVC Session；返回的 content 应由 Amoo 使用 TTS 播报。只适用于发微信消息、微信语音电话和… | LOCAL | APP_SIGN |
+| `show_notify_by_info` | 根据传入的标题、内容、PendingIntent 和图标生成并显示一条通知。该能力是底层通知展示接口，适用于系统服务、上层应用或后台任务主动展示自定义通知，不适合作为普通用户自然语言直接触发的能力。 ｜正例： - 系统服务根据标题、内容和跳转 intent 展示通知 - 后台任务完成后展示一条自定义通知 - 上层应用传… | LOCAL | APP_SIGN |
+| `show_widget_by_package_class` | 根据指定 packageName 和 Widget provider className 展示对应小组件。该能力要求明确传入小组件所属应用包名和完整类名，不负责随机选择小组件。 ｜正例： - 根据指定包名和类名展示小组件 - 展示 com.example.app 的指定 Widget - 按 Widget provid… | LOCAL | APP_SIGN |
+| `start_vibration` | 立即让设备按指定时长进行一次震动，适用于即时触觉提示。重复调用会重新提交震动请求；不创建未来的定时提醒、不循环震动，也不修改系统的来电或通知震动设置。成功返回「已提交震动请求」及采用的时长和强度，不等待震动结束；到期由系统停止，也可调用 stop_vibration 提前取消。返回成功仅表示请求已提交，实际震动仍受硬件… | LOCAL | APP_SIGN |
+| `stop_speak_text` | 停止本应用当前的语音播报或朗读（由 speak_text 发起），支持跨会话停止。当前会话无需有 speak_text 的调用历史：即使播报由其他会话发起，或当前上下文无法确认是否有播报，只要用户明确要求停止播报或朗读，就应直接调用本工具，无需先查询播放状态，也无需追问原会话。本工具会取消当前合成任务并清理待播音频。只… | LOCAL | APP_SIGN |
 
 ## 百度网盘
 
@@ -329,24 +329,6 @@
 | `trip_rate_driver` | 行程结束后，为本单司机提交评分与评价。需要用户明确给出评分意愿后再调用，不要主动替用户打分。 | CLOUD | - |
 | `trip_send_driver_message` | 给司机留言，给司机发消息 | CLOUD | - |
 
-## 网络设置
-
-`com.stepos.connectivitysettings`　·　11 项能力
-
-| 能力 | 说明 | 执行 | 鉴权 |
-|---|---|---|---|
-| `connectivitysettings_open_settings_advanced_wifi_settings_activity` | 打开/进入 WiFi 高级设置页面。此页面包括公共网络提醒、证书安装、MAC地址切换等功能。 ｜正例： - 打开 WiFi 高级设置 - 进入 WiFi 高级设置 - 打开 WiFi 高级设置页面 - 进入 WiFi 高级设置页面 - 查看 WiFi 高级设置 ｜反例： - 打开 WiFi 设置页面 → 应走 conn… | LOCAL | APP_SIGN |
-| `connectivitysettings_open_settings_bluetooth_settings_activity` | 打开系统设置中的蓝牙页面，用于配对/管理蓝牙设备（非开关）。 ｜正例： - 打开蓝牙设置 - 蓝牙配对 - 连蓝牙设备 - 管理蓝牙 - 查看蓝牙设备 - 查看蓝牙设备列表 ｜反例： - 打开蓝牙开关 → 不走页面跳转 | LOCAL | APP_SIGN |
-| `connectivitysettings_open_settings_mobile_network_settings_activity` | 打开/进入 SIM 卡管理页面，并进入双卡管理页面。此界面包含双卡数据切换和流量开关控制等功能。 ｜正例： - 打开SIM卡管理页面 - 进入双卡管理页面 - 查看双卡管理页面 - 查看SIM卡管理 - 查看流量设置 - 打开数据网络页面 ｜反例： - 打开网络设置 → 应走 connectivitysettings_… | LOCAL | APP_SIGN |
-| `connectivitysettings_open_settings_nfc_settings_activity` | 打开 NFC 设置页面。此功能不会直接打开 NFC 开关，而是显示 NFC 设置页面，您可以在其中配置 NFC 功能。 ｜正例： - 打开NFC设置 - 进入NFC设置页面 - 查看NFC设置 - 打开卡包设置 - 查看卡包设置 ｜反例： - 打开NFC开关 → 不走页面跳转 | LOCAL | APP_SIGN |
-| `connectivitysettings_open_settings_saved_access_points_wifi_settings` | 打开/进入已保存WiFi页面。该页面是管理WiFi的展示页面，可以选择某一个已保存的WIFI，进行取消保存、断开连接、分享、查看该WIFI的详情信息等操作。 ｜正例： - 打开已保存的WiFi页面 - 进入已保存WiFi列表 - 查看我保存过的WiFi - 管理已保存的WiFi - 查看有哪些已保存的WiFi ｜反例：… | LOCAL | APP_SIGN |
-| `connectivitysettings_open_settings_tether_settings_activity` | 打开设置中的热点页面或网络共享页面，供用户进入热点与网络共享相关设置。 ｜正例： - 打开个人热点设置 - 进入网络共享页面 - 打开热点和网络共享设置 - 我想设置手机热点 - 查看热点和网络共享设置 - 进入热点和网络共享设置 ｜反例： - 打开 WiFi 设置 → 应走 connectivitysettings_… | LOCAL | APP_SIGN |
-| `connectivitysettings_open_settings_vpn_settings_activity` | 打开/进入VPN连接页面。该页面可以对VPN进行添加/配置，设置VPN相关偏好。 ｜正例： - 打开VPN连接页面 - 进入VPN设置 - 我要配置VPN - 帮我打开VPN偏好设置 - 查看VPN设置 - 添加VPN配置 ｜反例： -打开VPN开关 → 不走页面跳转 | LOCAL | APP_SIGN |
-| `connectivitysettings_open_settings_wifi_display_settings_activity` | 打开/进入投屏的设置界面，该功能不直接打开投屏的开关，而是展示投屏页面，进入之后可以搜索附近可投屏的设备，从而进行后续的连接操作。 ｜正例： - 打开投屏设置 - 进入无线投屏页面 - 打开投屏页面搜索附近设备 - 我想连接附近可投屏的设备 - 查看附近可投屏的设备 ｜反例： - 打开 WiFi 设置页面 → 应走 c… | LOCAL | APP_SIGN |
-| `connectivitysettings_open_settings_wifi_info_settings_activity` | 打开当前连接的 WiFi 详情页面，用于查看当前连接WiFi信息并进入该 Wi-Fi 的相关设置。 ｜正例： - 打开当前连接的 WiFi 详情 - 看看我现在连的 WiFi 详细信息 - 进入当前 WiFi 的详情页面 - 打开当前 WiFi 的静态 IP 设置页面 - 查看当前连接的 WiFi 信息 - 查看当前连… | LOCAL | APP_SIGN |
-| `connectivitysettings_open_settings_wifi_p_2_p_settings_activity` | 打开/进入P2P连接页面。该功能不直接进行连接操作。该页面可以查看搜索到的所有支持P2P的设备，并且可以发起连接申请。 ｜正例： - 打开P2P连接页面 - 查看支持P2P的设备 - 我要发起P2P设备连接 - 打开无线直连页面 - 查看无线直连设备 - 连接无线直连设备 - 查看无线直连设备状态 ｜反例： - 打开W… | LOCAL | APP_SIGN |
-| `connectivitysettings_open_settings_wifi_settings_activity` | 打开系统设置中的 WiFi 设置页（WiFi 列表和配置入口）。 ｜正例： - 打开 WiFi 设置 - 进入 WiFi 设置 - 打开 WiFi 页面 - 进入 WiFi 页面 - 搜索 WiFi 网络 ｜反例： - 打开 WiFi 高级设置 → 应走 connectivitysettings_open_settin… | LOCAL | APP_SIGN |
-
 ## 日历
 
 `com.android.calendar`　·　11 项能力　·　日程查看及管理
@@ -364,6 +346,24 @@
 | `calendar_open_new_edit_event_activity` | 打开/进入新建日程页面（仅打开，不直接创建内容）。该页面支持创建普通日程事件，以及创建特殊事件（生日/纪念日/倒数日），由用户自行填写并保存。 示例话术：打开日历的添加日程页面；进入新建日程界面；我想创建生日或纪念日，先打开添加页面；打开添加倒数日的页面。 不要用于：直接在日历里新增普通日程（请改用 calendar_… | LOCAL | APP_SIGN |
 | `calendar_query_event` | 在用户日历中根据开始时间和结束时间查询日程。 ｜正例： - 查一下今天的日程 - 看看我明天有哪些日程 - 帮我查最近几天的日历安排 - 查询一下这周的日程 ｜返回： 成功时返回文本：「查询到N条日程数据：」+ JSON 数组（ScheduleMcpEvent）。字段：title、description、locatio… | LOCAL | APP_SIGN |
 | `calendar_query_special_event` | 在用户日历中根据开始时间和结束时间查询特殊事件（生日/纪念日/倒数日）。event_types 指定查询类型，不传或为空时查询全部类型。 ｜正例： - 查一下今天的特殊事件 - 帮我找本周的生日 - 看看这个月有哪些纪念日 - 查询最近几天的倒数日 ｜反例： - 查询今天有哪些日程 → 应走 calendar_quer… | LOCAL | APP_SIGN |
+
+## 网络设置
+
+`com.stepos.connectivitysettings`　·　11 项能力
+
+| 能力 | 说明 | 执行 | 鉴权 |
+|---|---|---|---|
+| `connectivitysettings_open_settings_advanced_wifi_settings_activity` | 打开/进入 WiFi 高级设置页面。此页面包括公共网络提醒、证书安装、MAC地址切换等功能。 ｜正例： - 打开 WiFi 高级设置 - 进入 WiFi 高级设置 - 打开 WiFi 高级设置页面 - 进入 WiFi 高级设置页面 - 查看 WiFi 高级设置 ｜反例： - 打开 WiFi 设置页面 → 应走 conn… | LOCAL | APP_SIGN |
+| `connectivitysettings_open_settings_bluetooth_settings_activity` | 打开系统设置中的蓝牙页面，用于配对/管理蓝牙设备（非开关）。 ｜正例： - 打开蓝牙设置 - 蓝牙配对 - 连蓝牙设备 - 管理蓝牙 - 查看蓝牙设备 - 查看蓝牙设备列表 ｜反例： - 打开蓝牙开关 → 不走页面跳转 | LOCAL | APP_SIGN |
+| `connectivitysettings_open_settings_mobile_network_settings_activity` | 打开/进入 SIM 卡管理页面，并进入双卡管理页面。此界面包含双卡数据切换和流量开关控制等功能。 ｜正例： - 打开SIM卡管理页面 - 进入双卡管理页面 - 查看双卡管理页面 - 查看SIM卡管理 - 查看流量设置 - 打开数据网络页面 ｜反例： - 打开网络设置 → 应走 connectivitysettings_… | LOCAL | APP_SIGN |
+| `connectivitysettings_open_settings_nfc_settings_activity` | 打开 NFC 设置页面。此功能不会直接打开 NFC 开关，而是显示 NFC 设置页面，您可以在其中配置 NFC 功能。 ｜正例： - 打开NFC设置 - 进入NFC设置页面 - 查看NFC设置 - 打开卡包设置 - 查看卡包设置 ｜反例： - 打开NFC开关 → 不走页面跳转 | LOCAL | APP_SIGN |
+| `connectivitysettings_open_settings_saved_access_points_wifi_settings` | 打开/进入已保存WiFi页面。该页面是管理WiFi的展示页面，可以选择某一个已保存的WIFI，进行取消保存、断开连接、分享、查看该WIFI的详情信息等操作。 ｜正例： - 打开已保存的WiFi页面 - 进入已保存WiFi列表 - 查看我保存过的WiFi - 管理已保存的WiFi - 查看有哪些已保存的WiFi ｜反例：… | LOCAL | APP_SIGN |
+| `connectivitysettings_open_settings_tether_settings_activity` | 打开设置中的热点页面或网络共享页面，供用户进入热点与网络共享相关设置。 ｜正例： - 打开个人热点设置 - 进入网络共享页面 - 打开热点和网络共享设置 - 我想设置手机热点 - 查看热点和网络共享设置 - 进入热点和网络共享设置 ｜反例： - 打开 WiFi 设置 → 应走 connectivitysettings_… | LOCAL | APP_SIGN |
+| `connectivitysettings_open_settings_vpn_settings_activity` | 打开/进入VPN连接页面。该页面可以对VPN进行添加/配置，设置VPN相关偏好。 ｜正例： - 打开VPN连接页面 - 进入VPN设置 - 我要配置VPN - 帮我打开VPN偏好设置 - 查看VPN设置 - 添加VPN配置 ｜反例： -打开VPN开关 → 不走页面跳转 | LOCAL | APP_SIGN |
+| `connectivitysettings_open_settings_wifi_display_settings_activity` | 打开/进入投屏的设置界面，该功能不直接打开投屏的开关，而是展示投屏页面，进入之后可以搜索附近可投屏的设备，从而进行后续的连接操作。 ｜正例： - 打开投屏设置 - 进入无线投屏页面 - 打开投屏页面搜索附近设备 - 我想连接附近可投屏的设备 - 查看附近可投屏的设备 ｜反例： - 打开 WiFi 设置页面 → 应走 c… | LOCAL | APP_SIGN |
+| `connectivitysettings_open_settings_wifi_info_settings_activity` | 打开当前连接的 WiFi 详情页面，用于查看当前连接WiFi信息并进入该 Wi-Fi 的相关设置。 ｜正例： - 打开当前连接的 WiFi 详情 - 看看我现在连的 WiFi 详细信息 - 进入当前 WiFi 的详情页面 - 打开当前 WiFi 的静态 IP 设置页面 - 查看当前连接的 WiFi 信息 - 查看当前连… | LOCAL | APP_SIGN |
+| `connectivitysettings_open_settings_wifi_p_2_p_settings_activity` | 打开/进入P2P连接页面。该功能不直接进行连接操作。该页面可以查看搜索到的所有支持P2P的设备，并且可以发起连接申请。 ｜正例： - 打开P2P连接页面 - 查看支持P2P的设备 - 我要发起P2P设备连接 - 打开无线直连页面 - 查看无线直连设备 - 连接无线直连设备 - 查看无线直连设备状态 ｜反例： - 打开W… | LOCAL | APP_SIGN |
+| `connectivitysettings_open_settings_wifi_settings_activity` | 打开系统设置中的 WiFi 设置页（WiFi 列表和配置入口）。 ｜正例： - 打开 WiFi 设置 - 进入 WiFi 设置 - 打开 WiFi 页面 - 进入 WiFi 页面 - 搜索 WiFi 网络 ｜反例： - 打开 WiFi 高级设置 → 应走 connectivitysettings_open_settin… | LOCAL | APP_SIGN |
 
 ## 时钟
 
@@ -447,17 +447,6 @@
 | `screen_capture_stop_record` | 停止屏幕录制功能，用于结束当前正在进行的屏幕录制任务并保存视频文件。无需进入设置页面即可直接停止录屏。 ｜正例： - 停止录屏 - 结束当前的屏幕录制 - 帮我关闭录制并保存视频 ｜反例： - 开始录屏 → 应走 screen_capture_record - 帮我录一下屏幕 → 应走 screen_capture_r… | LOCAL | APP_SIGN |
 | `screen_capture_take_long_screenshot` | 长截图功能，用于自动滚动当前页面并连续截图，拼接生成完整长图。适用于网页、聊天记录、列表等超出屏幕范围的内容截取场景。截长图。 ｜正例： - 帮我截一张长截图 - 把当前页面滚动截完整 - 给这个聊天记录做长截图 - 截取完整页面 ｜反例： - 帮我截一下当前屏幕 → 应走 screen_capture_screens… | LOCAL | APP_SIGN |
 
-## WorkBuddy MCP
-
-云端服务　·　4 项能力　·　通过外部agent服务封装MCP服务跟WorkBuddy进行通信
-
-| 能力 | 说明 | 执行 | 鉴权 |
-|---|---|---|---|
-| `wb_chat` | 发起一轮对话（异步）。立即返回 session_id/run_id/message_id 回执；真正回答稍后经 wb_get_session_history 轮询该 run 的 response 终帧。 | CLOUD | - |
-| `wb_get_file_sync` | 按 file_id 取产物下载/预览 URL（异步轮询用）。file_status: 0 同步中 / 1 已同步 / 2 失败 / 3 安审；同步中时调用方应继续轮询。 | CLOUD | - |
-| `wb_get_run_status` | 按 session_id + run_id 查询单轮执行状态与结果（异步轮询用）。status: RUN_CREATED 创建成功 / RUN_RUNNING 执行中 / RUN_FAILED 失败 / RUN_TIMEOUT 超时 / RUN_SUCCESS 成功；成功时 result 为终帧 assistant M… | CLOUD | - |
-| `wb_get_session_history` | 按 session_id 拉该会话全部 run 的终帧记录（异步轮询用）。completed=false 表示该 run 尚未产出回答，调用方应继续轮询。since_seq/limit 支持增量与分页。 | CLOUD | - |
-
 ## 什么值得买
 
 云端服务　·　4 项能力　·　值得买开发的海纳购物管家，一款专业为用户提供来自全网与兴趣高度相关的、公允的AI消费决策支持工具。它支持四种消费决策模式：商品推荐、商品总结、商品对比、优惠好价。
@@ -468,6 +457,17 @@
 | `zhidemai_discount_search` | 用于查询优惠爆料及优惠购买方案。 检索值得买用户爆料的当前优惠，返回爆料价、领券步骤、凑单加购指引和直达购买链接。 调用场景：用户明确询问“有没有优惠券”“最近有什么好价”“怎么领券”“怎么凑单”“优惠怎么叠加”。 边界：单纯查询当前售价、跨商城比价或推荐具体商品，优先使用 zhidemai_product_searc… | CLOUD | - |
 | `zhidemai_graph_search` | 用于查询商品的客观参数、规格和型号配置差异。 在知识图谱中查询3C数码、家电等商品实体，返回产品描述、核心参数、热度值及相关文章链接，支持按领域限定范围。 调用场景：用户询问“参数是多少”“有哪些配置”“两个型号的规格有什么区别”。 边界：“实际续航怎么样”“好不好用”“有哪些缺点”属于使用体验，优先使用 zhidem… | CLOUD | - |
 | `zhidemai_product_search` | 用于查找、筛选和推荐可购买的具体商品，以及查询当前售价、进行跨商城比价。 按品类或商品关键词检索淘宝、京东、天猫、拼多多等商城的SKU列表，返回价格、销量、规格、店铺及历史价格标签，支持按商城ID、品牌、价格区间和排序方式筛选。 调用场景：用户要求“推荐一款/几款商品”“找符合条件的商品”“查各平台价格”“按价格或销量… | CLOUD | - |
+
+## WorkBuddy MCP
+
+云端服务　·　4 项能力　·　通过外部agent服务封装MCP服务跟WorkBuddy进行通信
+
+| 能力 | 说明 | 执行 | 鉴权 |
+|---|---|---|---|
+| `wb_chat` | 发起一轮对话（异步）。立即返回 session_id/run_id/message_id 回执；真正回答稍后经 wb_get_session_history 轮询该 run 的 response 终帧。 | CLOUD | - |
+| `wb_get_file_sync` | 按 file_id 取产物下载/预览 URL（异步轮询用）。file_status: 0 同步中 / 1 已同步 / 2 失败 / 3 安审；同步中时调用方应继续轮询。 | CLOUD | - |
+| `wb_get_run_status` | 按 session_id + run_id 查询单轮执行状态与结果（异步轮询用）。status: RUN_CREATED 创建成功 / RUN_RUNNING 执行中 / RUN_FAILED 失败 / RUN_TIMEOUT 超时 / RUN_SUCCESS 成功；成功时 result 为终帧 assistant M… | CLOUD | - |
+| `wb_get_session_history` | 按 session_id 拉该会话全部 run 的终帧记录（异步轮询用）。completed=false 表示该 run 尚未产出回答，调用方应继续轮询。since_seq/limit 支持增量与分页。 | CLOUD | - |
 
 ## 软件包安装程序
 
@@ -499,15 +499,6 @@
 | `amap_poi_detail_card` | 高德地点详情卡聚合能力。输入具体地点的 POI id，调高德拉取该地点详情，返回端侧可直接渲染的地点详情卡（map_poi_detail）：名称、评分、地址、商圈、营业时间、人均消费、图片，卡上带「导航过去」按钮。 ## 坐标系 高德工具传入及返回的经纬度（包括卡片和导航链接中的坐标）均使用 GCJ-02（国测局坐标）… | CLOUD | - |
 | `amap_route_card` | 高德出行路线卡聚合能力。输入起终点经纬度（GCJ-02，取自 maps_search_detail），一次并发拉取驾车/步行/骑行三种方式的耗时与距离，返回端侧可直接渲染的路线卡（map_route）；卡上可切换出行方式、点按钮跳转高德导航。 ## 何时用 用户询问驾车、步行、骑行的路线或表达导航意图时，统一调用 am… | CLOUD | - |
 
-## 搜索
-
-`com.stepos.net.search`　·　2 项能力
-
-| 能力 | 说明 | 执行 | 鉴权 |
-|---|---|---|---|
-| `search_open` | 打开全局搜索页面，支持搜索应用和设置项 ｜正例： - 打开全局搜索 - 帮我打开全局搜索 - 我想搜索应用/app ｜反例： - 打开搜索设置 → 应走 search_setting | LOCAL | APP_SIGN |
-| `search_setting` | 打开全局搜索的设置页面，路径为全局搜索—更多—设置 ｜正例： - 打开全局搜索的设置页 - 帮我打开全局搜索的设置页 - 进入全局搜索的设置页 ｜反例： - 打开全局搜索 → 应走 search_open | LOCAL | APP_SIGN |
-
 ## 私密保险箱
 
 `com.stepos.safebox`　·　2 项能力　·　用户个人文件加密管理器
@@ -535,6 +526,15 @@
 | `security_service_get_uuid` | 在安全服务宿主场景下查询并返回当前设备的 OAID（匿名设备标识）；无入参，由端侧直接返回结果。｜正例： - 手机 OAID 是多少 - 匿名设备标识是什么 - 查一下 OAID - 广告标识符是多少 - 本机 OAID 帮我查 ｜反例： - 打开 OAID 设置 → 应走 security_service_open_… | LOCAL | APP_SIGN |
 | `security_service_open_oaid_settings` | 在安全服务宿主场景下拉起系统侧 OAID（匿名设备标识）设置界面，用户可查看说明、关闭或调整广告标识相关开关，以及管理应用对设备标识的访问。 ｜正例： - 打开 OAID 设置 - 设备标识在哪改 - 广告标识符怎么关 - 带我去匿名设备标识那一页 - 系统里设备匿名标识入口在哪 ｜反例： - 获取当前设备的 UUID… | LOCAL | APP_SIGN |
 
+## 搜索
+
+`com.stepos.net.search`　·　2 项能力
+
+| 能力 | 说明 | 执行 | 鉴权 |
+|---|---|---|---|
+| `search_open` | 打开全局搜索页面，支持搜索应用和设置项 ｜正例： - 打开全局搜索 - 帮我打开全局搜索 - 我想搜索应用/app ｜反例： - 打开搜索设置 → 应走 search_setting | LOCAL | APP_SIGN |
+| `search_setting` | 打开全局搜索的设置页面，路径为全局搜索—更多—设置 ｜正例： - 打开全局搜索的设置页 - 帮我打开全局搜索的设置页 - 进入全局搜索的设置页 ｜反例： - 打开全局搜索 → 应走 search_open | LOCAL | APP_SIGN |
+
 ## 相机
 
 `com.stepos.media.camera`　·　2 项能力
@@ -552,13 +552,13 @@
 |---|---|---|---|
 | `open_flash_light` | 打开或关闭闪光灯 ｜正例： - 打开闪光灯 - 关掉闪光灯 - 帮我开一下手电筒 - 把手电筒关了 | LOCAL | APP_SIGN |
 
-## Amoo
+## 帮助和反馈
 
-`com.stepos.ailauncher`　·　1 项能力　·　手机桌面，小跃AI配置管理
+`com.stepos.feedback`　·　1 项能力　·　提交手机使用的问题反馈
 
 | 能力 | 说明 | 执行 | 鉴权 |
 |---|---|---|---|
-| `ailauncher_load_tripartite_common_card` | 用途：当你已经拿到一条来自第三方平台的结构化业务结果，需要在聊天界面里以一张「卡片」的形式直观展示给用户时，调用本能力。它会把你给的字段渲染成带标题/状态/摘要/跳转按钮的可视卡片，比纯文字回复更清晰，用户可直接在卡片上点按钮跳转到对应三方 App 或网页。 何时使用：手里有需要可视化展示的三方业务数据，且希望用户能一… | LOCAL | APP_SIGN |
+| `feedback_submit_question` | 通过 AI 对话提交用户的问题反馈到帮助与反馈系统，并自动上传系统收集的设备信息（如机型、系统版本、固件版本、地理位置等）。提交成功返回「提交成功」，失败返回具体错误原因。 ｜正例： - 我要反馈一个问题 - 帮我提交一下使用中遇到的故障 - 我想给帮助和反馈提个建议 - 把我刚才描述的问题反馈给工程师 | LOCAL | APP_SIGN |
 
 ## XMSCore
 
@@ -568,22 +568,6 @@
 |---|---|---|---|
 | `get_current_location` | 在系统定位服务中查询你当前所在位置，返回当前位置的经纬度和文字地址（国家、省、市、区县及完整地址）。latitude/longitude 为 WGS84（与 Android 原生 GPS 一致）。国内网约车、高德、腾讯、滴滴请使用 gcjLatitude/gcjLongitude（GCJ-02），不要把 WGS84 当… | LOCAL | APP_SIGN |
 
-## 应用商店
-
-`com.stepos.appstore`　·　1 项能力　·　应用查询、下载、管理及更新等
-
-| 能力 | 说明 | 执行 | 鉴权 |
-|---|---|---|---|
-| `appstore_search_app` | 在应用商店里**搜索 / 查询 / 查找**应用——跳到商店搜索页并自动按关键词检索，结果由商店 原生页面展示。**只查询，不下载、不安装**；用户意图是下载/安装时应改走 [installApp]。 **动词归一化**：搜索 / 搜 / 查询 / 查 / 查找 / 找 / 看看有没有 / 应用商店里有没有 → 本函数… | LOCAL | APP_SIGN |
-
-## 帮助和反馈
-
-`com.stepos.feedback`　·　1 项能力　·　提交手机使用的问题反馈
-
-| 能力 | 说明 | 执行 | 鉴权 |
-|---|---|---|---|
-| `feedback_submit_question` | 通过 AI 对话提交用户的问题反馈到帮助与反馈系统，并自动上传系统收集的设备信息（如机型、系统版本、固件版本、地理位置等）。提交成功返回「提交成功」，失败返回具体错误原因。 ｜正例： - 我要反馈一个问题 - 帮我提交一下使用中遇到的故障 - 我想给帮助和反馈提个建议 - 把我刚才描述的问题反馈给工程师 | LOCAL | APP_SIGN |
-
 ## 计算器
 
 `com.stepos.calculator`　·　1 项能力　·　计算器，用于进行数学计算
@@ -592,13 +576,21 @@
 |---|---|---|---|
 | `evaluate_expression` | 根据数学表达式字符串计算结果，与计算器内置科学计算引擎一致（Arity）；三角函数默认按角度，可通过 use_radians 切换为弧度。 ｜正例： - 帮我算一下二加三乘四等于多少 - 用计算器算 sin 三十 - 帮我算根号二 - 按弧度帮我算一下三角函数 ｜返回： 成功时返回 MCP CallToolResult… | LOCAL | APP_SIGN |
 
-## 天气
+## 应用商店
 
-`com.stepos.weather`　·　1 项能力
+`com.stepos.appstore`　·　1 项能力　·　应用查询、下载、管理及更新等
 
 | 能力 | 说明 | 执行 | 鉴权 |
 |---|---|---|---|
-| `weather_get_current_location_weather` | 查询用户当前所在地的天气（端内自动定位，需定位权限与已同意隐私政策）,返回逐日或者逐时的天气信息,并以卡片形式向用户展示详细数据。 [type]类型说明： - `by_date`（默认）：按日期的逐天 - `by_hour`：按小时，返回[startDate]当天全部可用逐时 + 次日 00:00~07:00（共 8 … | LOCAL | APP_SIGN |
+| `appstore_search_app` | 在应用商店里**搜索 / 查询 / 查找**应用——跳到商店搜索页并自动按关键词检索，结果由商店 原生页面展示。**只查询，不下载、不安装**；用户意图是下载/安装时应改走 [installApp]。 **动词归一化**：搜索 / 搜 / 查询 / 查 / 查找 / 找 / 看看有没有 / 应用商店里有没有 → 本函数… | LOCAL | APP_SIGN |
+
+## Amoo
+
+`com.stepos.ailauncher`　·　1 项能力　·　手机桌面，小跃AI配置管理
+
+| 能力 | 说明 | 执行 | 鉴权 |
+|---|---|---|---|
+| `ailauncher_load_tripartite_common_card` | 用途：当你已经拿到一条来自第三方平台的结构化业务结果，需要在聊天界面里以一张「卡片」的形式直观展示给用户时，调用本能力。它会把你给的字段渲染成带标题/状态/摘要/跳转按钮的可视卡片，比纯文字回复更清晰，用户可直接在卡片上点按钮跳转到对应三方 App 或网页。 何时使用：手里有需要可视化展示的三方业务数据，且希望用户能一… | LOCAL | APP_SIGN |
 
 ## 智能体安全中心
 
@@ -607,6 +599,14 @@
 | 能力 | 说明 | 执行 | 鉴权 |
 |---|---|---|---|
 | `file_restore` | 按删除前的外部存储原始路径从回收站恢复文件或目录。目录恢复默认包含原路径前缀下的项目；recursive=false 时只恢复精确匹配路径。path 与 paths 互斥，必须二选一传入。 ｜正例： - 恢复这个文件 - 把刚才删除的目录还原 - 按原来的路径从回收站恢复文件 ｜反例： - 把文件移到回收站 → 应走 … | LOCAL | APP_SIGN |
+
+## 天气
+
+`com.stepos.weather`　·　1 项能力
+
+| 能力 | 说明 | 执行 | 鉴权 |
+|---|---|---|---|
+| `weather_get_current_location_weather` | 查询用户当前所在地的天气（端内自动定位，需定位权限与已同意隐私政策）,返回逐日或者逐时的天气信息,并以卡片形式向用户展示详细数据。 [type]类型说明： - `by_date`（默认）：按日期的逐天 - `by_hour`：按小时，返回[startDate]当天全部可用逐时 + 次日 00:00~07:00（共 8 … | LOCAL | APP_SIGN |
 
 ## 咪咕音乐
 
