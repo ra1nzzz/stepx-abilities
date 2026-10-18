@@ -21,6 +21,11 @@ STEPX Neo 设备上**已注册原子能力（ability）的全量清单**，由�
 | `data/abilities.json` | 原始快照（完整字段，含入参/出参 Schema） |
 | `data/snapshot.json` | 快照元信息（时间、总数、内容指纹） |
 | `scripts/render.py` | 由原始快照重新生成 README 与明细 |
+| `docs/agent-app-development.md` | 原生 Agent App 开发说明：MCP / A2A / HTTP 与 WebSocket 的取舍 |
+
+## 相关文档
+
+- [原生 Agent App 开发说明](docs/agent-app-development.md)：MCP（AppFunctions）、A2A 与裸 HTTP/WebSocket 分别解决什么问题，以及推荐落地路径。
 
 ## App 索引
 
