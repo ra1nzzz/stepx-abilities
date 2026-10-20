@@ -17754,5 +17754,501 @@
     "extra": null,
     "slaScene": null,
     "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 25934,
+    "abilityId": 3508,
+    "appName": "相机",
+    "appDesc": null,
+    "appSource": "SYSTEM",
+    "packageName": "com.stepos.media.camera",
+    "appId": 494,
+    "toolUniqueName": "494_camera_capture_100116",
+    "name": "camera_capture",
+    "tool_alias_for_agent": "camera_capture",
+    "functionName": "com.stepos.media.camera.appfunctions.CameraControlFunctions#capture",
+    "description": "使用相机拍一张照片。例如：拍照、拍一张。当前若处于录像等不能拍照的模式，会先切到拍照模式再拍；使用当前镜头拍摄，不会切换前后置。调用后会拉起相机到前台（跳转相机页面）。以下说法不走本能力：自拍一张 → 先走 camera_open_selfie_mode 切到前置，再走本能力拍照；用前置/后置摄像头拍照 → 先走camera_switch_camera_facing 切到对应镜头，再走本能力拍照；倒计时拍照 → 应走camera_capture_with_countdown。",
+    "type": "",
+    "capabilityType": "",
+    "callType": "FUNCTION_CALL",
+    "authType": "APP_SIGN",
+    "permission": "2",
+    "appVersion": "100116",
+    "callingMethod": "LOCAL",
+    "timeout": "10",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": []
+    },
+    "outputSchema": {
+      "type": "object",
+      "required": [
+        "code",
+        "message",
+        "success"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "extra": {
+      "jetpackResponseJson": "{\"description\":\"执行结果。code=0：已拉起相机并投递拍照； 10304：相机缺少相机权限；10501：用户未同意相机隐私政策；10002：拉起相机失败。\",\"valueType\":{\"kind\":\"reference\",\"isNullable\":false,\"description\":\"\",\"referenceDataType\":\"com.stepos.media.camera.appfunctions.CameraControlResult\"}}",
+      "jetpackSchemaVersion": 1,
+      "jetpackComponentsJson": "{\"dataTypes\":{\"com.stepos.media.camera.appfunctions.CameraControlResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机内控制类原子能力的统一返回结构。\\n\\n @property code 错误码。0 成功；-32602 参数不正确；10304 相机缺少相机权限；\\n 10501 用户未同意相机隐私政策；10002 拉起相机失败。\\n @property message 结果描述，成功为 ok，失败为错误信息。\\n @property success 是否成功，true 成功，false 失败。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraControlResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}},\"com.stepos.media.camera.appfunctions.CameraLaunchResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机原子能力的统一返回结构。\\n\\n 字段语义对齐《原子能力指导文档》中推荐的 FunctionResult；当前这两个「拉起相机」\\n 能力不返回业务数据，因此只保留 code \\/ message \\/ success 三个字段。\\n\\n @property code 错误码。0 表示成功；401 无相机权限；403 相机被占用\\/拉起失败；500 内部异常。\\n @property message 结果描述，失败时为错误信息。\\n @property success 能力是否执行成功。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraLaunchResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}}}}",
+      "jetpackParametersJson": "[]",
+      "slaScene": "2"
+    },
+    "slaScene": "2",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 25935,
+    "abilityId": 3509,
+    "appName": "相机",
+    "appDesc": null,
+    "appSource": "SYSTEM",
+    "packageName": "com.stepos.media.camera",
+    "appId": 494,
+    "toolUniqueName": "494_camera_set_video_resolution_100116",
+    "name": "camera_set_video_resolution",
+    "tool_alias_for_agent": "camera_set_video_resolution",
+    "functionName": "com.stepos.media.camera.appfunctions.CameraControlFunctions#setVideoResolution",
+    "description": "设置录像分辨率。例如：设置成 4K 录制、分辨率调为 4K、4K 视频拍摄。会先切到录像模式再设置；本机或当前镜头不支持该分辨率时不做修改。调用后会拉起相机到前台（跳转相机页面）。",
+    "type": "",
+    "capabilityType": "",
+    "callType": "FUNCTION_CALL",
+    "authType": "APP_SIGN",
+    "permission": "2",
+    "appVersion": "100116",
+    "callingMethod": "LOCAL",
+    "timeout": "10",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "resolution"
+      ],
+      "properties": {
+        "resolution": {
+          "type": "string",
+          "description": "必填。目标分辨率，取值 720P、1080P、4K、8K（大小写均可）。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "required": [
+        "code",
+        "message",
+        "success"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "extra": {
+      "jetpackResponseJson": "{\"description\":\"执行结果。code=0：已拉起相机并投递设置；-32602：取值不在上述范围内； 10304：相机缺少相机权限；10501：用户未同意相机隐私政策；10002：拉起相机失败。\",\"valueType\":{\"kind\":\"reference\",\"isNullable\":false,\"description\":\"\",\"referenceDataType\":\"com.stepos.media.camera.appfunctions.CameraControlResult\"}}",
+      "jetpackSchemaVersion": 1,
+      "jetpackComponentsJson": "{\"dataTypes\":{\"com.stepos.media.camera.appfunctions.CameraControlResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机内控制类原子能力的统一返回结构。\\n\\n @property code 错误码。0 成功；-32602 参数不正确；10304 相机缺少相机权限；\\n 10501 用户未同意相机隐私政策；10002 拉起相机失败。\\n @property message 结果描述，成功为 ok，失败为错误信息。\\n @property success 是否成功，true 成功，false 失败。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraControlResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}},\"com.stepos.media.camera.appfunctions.CameraLaunchResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机原子能力的统一返回结构。\\n\\n 字段语义对齐《原子能力指导文档》中推荐的 FunctionResult；当前这两个「拉起相机」\\n 能力不返回业务数据，因此只保留 code \\/ message \\/ success 三个字段。\\n\\n @property code 错误码。0 表示成功；401 无相机权限；403 相机被占用\\/拉起失败；500 内部异常。\\n @property message 结果描述，失败时为错误信息。\\n @property success 能力是否执行成功。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraLaunchResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}}}}",
+      "jetpackParametersJson": "[{\"name\":\"resolution\",\"isRequired\":true,\"description\":\"必填。目标分辨率，取值 720P、1080P、4K、8K（大小写均可）。\",\"dataType\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"}}]",
+      "slaScene": "2"
+    },
+    "slaScene": "2",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 25928,
+    "abilityId": 3510,
+    "appName": "相机",
+    "appDesc": null,
+    "appSource": "SYSTEM",
+    "packageName": "com.stepos.media.camera",
+    "appId": 494,
+    "toolUniqueName": "494_camera_zoom_to_100116",
+    "name": "camera_zoom_to",
+    "tool_alias_for_agent": "camera_zoom_to",
+    "functionName": "com.stepos.media.camera.appfunctions.CameraControlFunctions#zoomTo",
+    "description": "把相机变焦到指定倍率。例如：变焦到 10 倍、0.6 倍缩放、切到 5 倍、放大 3X。超出本机当前模式支持的范围时，按最接近的边界倍率生效（如超过最大倍率则取最大倍率）。仅支持后置摄像头；当前为前置摄像头（如自拍）时不支持变焦，调用不会生效。\n    调用后会拉起相机到前台（跳转相机页面）。",
+    "type": "",
+    "capabilityType": "",
+    "callType": "FUNCTION_CALL",
+    "authType": "APP_SIGN",
+    "permission": "2",
+    "appVersion": "100116",
+    "callingMethod": "LOCAL",
+    "timeout": "10",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "ratio"
+      ],
+      "properties": {
+        "ratio": {
+          "type": "number",
+          "description": "必填。目标变焦倍率，必须大于 0，按小数传入，例如 0.6、1.0、2.0、5.0、10.0。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "required": [
+        "code",
+        "message",
+        "success"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "extra": {
+      "jetpackResponseJson": "{\"description\":\"执行结果。code=0：已拉起相机并投递变焦；-32602：倍率不合法； 10304：相机缺少相机权限；10501：用户未同意相机隐私政策；10002：拉起相机失败。\",\"valueType\":{\"kind\":\"reference\",\"isNullable\":false,\"description\":\"\",\"referenceDataType\":\"com.stepos.media.camera.appfunctions.CameraControlResult\"}}",
+      "jetpackSchemaVersion": 1,
+      "jetpackComponentsJson": "{\"dataTypes\":{\"com.stepos.media.camera.appfunctions.CameraControlResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机内控制类原子能力的统一返回结构。\\n\\n @property code 错误码。0 成功；-32602 参数不正确；10304 相机缺少相机权限；\\n 10501 用户未同意相机隐私政策；10002 拉起相机失败。\\n @property message 结果描述，成功为 ok，失败为错误信息。\\n @property success 是否成功，true 成功，false 失败。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraControlResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}},\"com.stepos.media.camera.appfunctions.CameraLaunchResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机原子能力的统一返回结构。\\n\\n 字段语义对齐《原子能力指导文档》中推荐的 FunctionResult；当前这两个「拉起相机」\\n 能力不返回业务数据，因此只保留 code \\/ message \\/ success 三个字段。\\n\\n @property code 错误码。0 表示成功；401 无相机权限；403 相机被占用\\/拉起失败；500 内部异常。\\n @property message 结果描述，失败时为错误信息。\\n @property success 能力是否执行成功。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraLaunchResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}}}}",
+      "jetpackParametersJson": "[{\"name\":\"ratio\",\"isRequired\":true,\"description\":\"必填。目标变焦倍率，必须大于 0，按小数传入，例如 0.6、1.0、2.0、5.0、10.0。\",\"dataType\":{\"kind\":\"float\",\"isNullable\":false,\"description\":\"\"}}]",
+      "slaScene": "2"
+    },
+    "slaScene": "2",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 25929,
+    "abilityId": 3511,
+    "appName": "相机",
+    "appDesc": null,
+    "appSource": "SYSTEM",
+    "packageName": "com.stepos.media.camera",
+    "appId": 494,
+    "toolUniqueName": "494_camera_switch_camera_facing_100116",
+    "name": "camera_switch_camera_facing",
+    "tool_alias_for_agent": "camera_switch_camera_facing",
+    "functionName": "com.stepos.media.camera.appfunctions.CameraControlFunctions#switchCameraFacing",
+    "description": "切换前置/后置摄像头，并保持当前拍摄模式不变。例如：切换到后摄、调到前置摄像头、翻转镜头。支持切镜的模式下均可使用，可在前后置之间来回切换。调用后会拉起相机到前台（跳转相机页面）。以下说法不走本能力：打开自拍、自拍一张 → 应走 camera_open_selfie_mode。",
+    "type": "",
+    "capabilityType": "",
+    "callType": "FUNCTION_CALL",
+    "authType": "APP_SIGN",
+    "permission": "2",
+    "appVersion": "100116",
+    "callingMethod": "LOCAL",
+    "timeout": "10",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "facing"
+      ],
+      "properties": {
+        "facing": {
+          "type": "string",
+          "description": "必填。目标镜头：front 表示前置，back 表示后置，toggle 表示在前后置之间切换。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "required": [
+        "code",
+        "message",
+        "success"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "extra": {
+      "jetpackResponseJson": "{\"description\":\"执行结果。code=0：已拉起相机并投递切换；-32602：facing 取值不合法； 10304：相机缺少相机权限；10501：用户未同意相机隐私政策；10002：拉起相机失败。\",\"valueType\":{\"kind\":\"reference\",\"isNullable\":false,\"description\":\"\",\"referenceDataType\":\"com.stepos.media.camera.appfunctions.CameraControlResult\"}}",
+      "jetpackSchemaVersion": 1,
+      "jetpackComponentsJson": "{\"dataTypes\":{\"com.stepos.media.camera.appfunctions.CameraControlResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机内控制类原子能力的统一返回结构。\\n\\n @property code 错误码。0 成功；-32602 参数不正确；10304 相机缺少相机权限；\\n 10501 用户未同意相机隐私政策；10002 拉起相机失败。\\n @property message 结果描述，成功为 ok，失败为错误信息。\\n @property success 是否成功，true 成功，false 失败。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraControlResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}},\"com.stepos.media.camera.appfunctions.CameraLaunchResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机原子能力的统一返回结构。\\n\\n 字段语义对齐《原子能力指导文档》中推荐的 FunctionResult；当前这两个「拉起相机」\\n 能力不返回业务数据，因此只保留 code \\/ message \\/ success 三个字段。\\n\\n @property code 错误码。0 表示成功；401 无相机权限；403 相机被占用\\/拉起失败；500 内部异常。\\n @property message 结果描述，失败时为错误信息。\\n @property success 能力是否执行成功。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraLaunchResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}}}}",
+      "jetpackParametersJson": "[{\"name\":\"facing\",\"isRequired\":true,\"description\":\"必填。目标镜头：front 表示前置，back 表示后置，toggle 表示在前后置之间切换。\",\"dataType\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"}}]",
+      "slaScene": "2"
+    },
+    "slaScene": "2",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 25930,
+    "abilityId": 3512,
+    "appName": "相机",
+    "appDesc": null,
+    "appSource": "SYSTEM",
+    "packageName": "com.stepos.media.camera",
+    "appId": 494,
+    "toolUniqueName": "494_camera_switch_mode_100116",
+    "name": "camera_switch_mode",
+    "tool_alias_for_agent": "camera_switch_mode",
+    "functionName": "com.stepos.media.camera.appfunctions.CameraControlFunctions#switchMode",
+    "description": "切换相机拍摄模式。例如：切换到人像模式、调到慢动作模式、使用录像模式。调用后会拉起相机到前台（跳转相机页面）。以下说法不走本能力：打开自拍、自拍模式 → 应走camera_open_selfie_mode；打开美颜、美颜模式 → 应走camera_open_beauty_mode。",
+    "type": "",
+    "capabilityType": "",
+    "callType": "FUNCTION_CALL",
+    "authType": "APP_SIGN",
+    "permission": "2",
+    "appVersion": "100116",
+    "callingMethod": "LOCAL",
+    "timeout": "10",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "description": "必填。目标模式名称，支持中文或英文，例如：拍照、录像、人像、夜景、专业、慢动作、 延时摄影、全景、高像素、微距、文档、扫码。本机不支持的模式会返回参数错误。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "required": [
+        "code",
+        "message",
+        "success"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "extra": {
+      "jetpackResponseJson": "{\"description\":\"执行结果。code=0：已拉起相机并投递切换；-32602：模式名无法识别或本机不支持； 10304：相机缺少相机权限；10501：用户未同意相机隐私政策；10002：拉起相机失败。\",\"valueType\":{\"kind\":\"reference\",\"isNullable\":false,\"description\":\"\",\"referenceDataType\":\"com.stepos.media.camera.appfunctions.CameraControlResult\"}}",
+      "jetpackSchemaVersion": 1,
+      "jetpackComponentsJson": "{\"dataTypes\":{\"com.stepos.media.camera.appfunctions.CameraControlResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机内控制类原子能力的统一返回结构。\\n\\n @property code 错误码。0 成功；-32602 参数不正确；10304 相机缺少相机权限；\\n 10501 用户未同意相机隐私政策；10002 拉起相机失败。\\n @property message 结果描述，成功为 ok，失败为错误信息。\\n @property success 是否成功，true 成功，false 失败。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraControlResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}},\"com.stepos.media.camera.appfunctions.CameraLaunchResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机原子能力的统一返回结构。\\n\\n 字段语义对齐《原子能力指导文档》中推荐的 FunctionResult；当前这两个「拉起相机」\\n 能力不返回业务数据，因此只保留 code \\/ message \\/ success 三个字段。\\n\\n @property code 错误码。0 表示成功；401 无相机权限；403 相机被占用\\/拉起失败；500 内部异常。\\n @property message 结果描述，失败时为错误信息。\\n @property success 能力是否执行成功。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraLaunchResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}}}}",
+      "jetpackParametersJson": "[{\"name\":\"mode\",\"isRequired\":true,\"description\":\"必填。目标模式名称，支持中文或英文，例如：拍照、录像、人像、夜景、专业、慢动作、 延时摄影、全景、高像素、微距、文档、扫码。本机不支持的模式会返回参数错误。\",\"dataType\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"}}]",
+      "slaScene": "2"
+    },
+    "slaScene": "2",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 25931,
+    "abilityId": 3513,
+    "appName": "相机",
+    "appDesc": null,
+    "appSource": "SYSTEM",
+    "packageName": "com.stepos.media.camera",
+    "appId": 494,
+    "toolUniqueName": "494_camera_set_video_frame_rate_100116",
+    "name": "camera_set_video_frame_rate",
+    "tool_alias_for_agent": "camera_set_video_frame_rate",
+    "functionName": "com.stepos.media.camera.appfunctions.CameraControlFunctions#setVideoFrameRate",
+    "description": "设置录像帧率。例如：设置成 60 帧录制、视频规格 60 帧。会先切到录像模式再设置；本机、当前镜头或当前分辨率不支持该帧率时不做修改。调用后会拉起相机到前台（跳转相机页面）。",
+    "type": "",
+    "capabilityType": "",
+    "callType": "FUNCTION_CALL",
+    "authType": "APP_SIGN",
+    "permission": "2",
+    "appVersion": "100116",
+    "callingMethod": "LOCAL",
+    "timeout": "10",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "fps"
+      ],
+      "properties": {
+        "fps": {
+          "type": "integer",
+          "description": "必填。目标帧率，取值 24、30、60。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "required": [
+        "code",
+        "message",
+        "success"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "extra": {
+      "jetpackResponseJson": "{\"description\":\"执行结果。code=0：已拉起相机并投递设置；-32602：取值不在上述范围内； 10304：相机缺少相机权限；10501：用户未同意相机隐私政策；10002：拉起相机失败。\",\"valueType\":{\"kind\":\"reference\",\"isNullable\":false,\"description\":\"\",\"referenceDataType\":\"com.stepos.media.camera.appfunctions.CameraControlResult\"}}",
+      "jetpackSchemaVersion": 1,
+      "jetpackComponentsJson": "{\"dataTypes\":{\"com.stepos.media.camera.appfunctions.CameraControlResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机内控制类原子能力的统一返回结构。\\n\\n @property code 错误码。0 成功；-32602 参数不正确；10304 相机缺少相机权限；\\n 10501 用户未同意相机隐私政策；10002 拉起相机失败。\\n @property message 结果描述，成功为 ok，失败为错误信息。\\n @property success 是否成功，true 成功，false 失败。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraControlResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}},\"com.stepos.media.camera.appfunctions.CameraLaunchResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机原子能力的统一返回结构。\\n\\n 字段语义对齐《原子能力指导文档》中推荐的 FunctionResult；当前这两个「拉起相机」\\n 能力不返回业务数据，因此只保留 code \\/ message \\/ success 三个字段。\\n\\n @property code 错误码。0 表示成功；401 无相机权限；403 相机被占用\\/拉起失败；500 内部异常。\\n @property message 结果描述，失败时为错误信息。\\n @property success 能力是否执行成功。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraLaunchResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}}}}",
+      "jetpackParametersJson": "[{\"name\":\"fps\",\"isRequired\":true,\"description\":\"必填。目标帧率，取值 24、30、60。\",\"dataType\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"}}]",
+      "slaScene": "2"
+    },
+    "slaScene": "2",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 25932,
+    "abilityId": 3514,
+    "appName": "相机",
+    "appDesc": null,
+    "appSource": "SYSTEM",
+    "packageName": "com.stepos.media.camera",
+    "appId": 494,
+    "toolUniqueName": "494_camera_capture_with_countdown_100116",
+    "name": "camera_capture_with_countdown",
+    "tool_alias_for_agent": "camera_capture_with_countdown",
+    "functionName": "com.stepos.media.camera.appfunctions.CameraControlFunctions#captureWithCountdown",
+    "description": "倒计时后拍照，倒计时只对本次拍照生效，不修改相机设置里的倒计时档位。 例如：设置 10 秒后拍照、开启倒计时拍照。当前模式不支持倒计时（如录像）时，会先切到拍照模式再倒计时拍照。调用后会拉起相机到前台（跳转相机页面）。",
+    "type": "",
+    "capabilityType": "",
+    "callType": "FUNCTION_CALL",
+    "authType": "APP_SIGN",
+    "permission": "2",
+    "appVersion": "100116",
+    "callingMethod": "LOCAL",
+    "timeout": "10",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "seconds"
+      ],
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "description": "必填，可传 null。倒计时秒数，取值 3、5、10；传 null 时默认 3 秒。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "required": [
+        "code",
+        "message",
+        "success"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "extra": {
+      "jetpackResponseJson": "{\"description\":\"执行结果。code=0：已拉起相机并投递倒计时拍照；-32602：秒数不在上述范围内； 10304：相机缺少相机权限；10501：用户未同意相机隐私政策；10002：拉起相机失败。\",\"valueType\":{\"kind\":\"reference\",\"isNullable\":false,\"description\":\"\",\"referenceDataType\":\"com.stepos.media.camera.appfunctions.CameraControlResult\"}}",
+      "jetpackSchemaVersion": 1,
+      "jetpackComponentsJson": "{\"dataTypes\":{\"com.stepos.media.camera.appfunctions.CameraControlResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机内控制类原子能力的统一返回结构。\\n\\n @property code 错误码。0 成功；-32602 参数不正确；10304 相机缺少相机权限；\\n 10501 用户未同意相机隐私政策；10002 拉起相机失败。\\n @property message 结果描述，成功为 ok，失败为错误信息。\\n @property success 是否成功，true 成功，false 失败。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraControlResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}},\"com.stepos.media.camera.appfunctions.CameraLaunchResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机原子能力的统一返回结构。\\n\\n 字段语义对齐《原子能力指导文档》中推荐的 FunctionResult；当前这两个「拉起相机」\\n 能力不返回业务数据，因此只保留 code \\/ message \\/ success 三个字段。\\n\\n @property code 错误码。0 表示成功；401 无相机权限；403 相机被占用\\/拉起失败；500 内部异常。\\n @property message 结果描述，失败时为错误信息。\\n @property success 能力是否执行成功。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraLaunchResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}}}}",
+      "jetpackParametersJson": "[{\"name\":\"seconds\",\"isRequired\":true,\"description\":\"必填，可传 null。倒计时秒数，取值 3、5、10；传 null 时默认 3 秒。\",\"dataType\":{\"kind\":\"int\",\"isNullable\":true,\"description\":\"\"}}]",
+      "slaScene": "2"
+    },
+    "slaScene": "2",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 25933,
+    "abilityId": 3515,
+    "appName": "相机",
+    "appDesc": null,
+    "appSource": "SYSTEM",
+    "packageName": "com.stepos.media.camera",
+    "appId": 494,
+    "toolUniqueName": "494_camera_toggle_recording_100116",
+    "name": "camera_toggle_recording",
+    "tool_alias_for_agent": "camera_toggle_recording",
+    "functionName": "com.stepos.media.camera.appfunctions.CameraControlFunctions#toggleRecording",
+    "description": "用相机开始或停止录像。例如：开始录像、停止记录、拍个视频、录一段。开始录像时若当前不是录像类模式，会先切到录像模式；已在录制中再开始、或未在录制时停止，均不做任何操作。调用后会拉起相机到前台（跳转相机页面）。以下说法不走本能力：录屏、录屏幕、开始录屏、停止录屏 → 属于系统录屏，不是相机录像。",
+    "type": "",
+    "capabilityType": "",
+    "callType": "FUNCTION_CALL",
+    "authType": "APP_SIGN",
+    "permission": "2",
+    "appVersion": "100116",
+    "callingMethod": "LOCAL",
+    "timeout": "10",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "start"
+      ],
+      "properties": {
+        "start": {
+          "type": "boolean",
+          "description": "必填。true 表示开始录像，false 表示停止录像。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "required": [
+        "code",
+        "message",
+        "success"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "extra": {
+      "jetpackResponseJson": "{\"description\":\"执行结果。code=0：已拉起相机并投递录像指令； 10304：相机缺少相机权限；10501：用户未同意相机隐私政策；10002：拉起相机失败。\",\"valueType\":{\"kind\":\"reference\",\"isNullable\":false,\"description\":\"\",\"referenceDataType\":\"com.stepos.media.camera.appfunctions.CameraControlResult\"}}",
+      "jetpackSchemaVersion": 1,
+      "jetpackComponentsJson": "{\"dataTypes\":{\"com.stepos.media.camera.appfunctions.CameraControlResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机内控制类原子能力的统一返回结构。\\n\\n @property code 错误码。0 成功；-32602 参数不正确；10304 相机缺少相机权限；\\n 10501 用户未同意相机隐私政策；10002 拉起相机失败。\\n @property message 结果描述，成功为 ok，失败为错误信息。\\n @property success 是否成功，true 成功，false 失败。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraControlResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}},\"com.stepos.media.camera.appfunctions.CameraLaunchResult\":{\"kind\":\"object\",\"isNullable\":true,\"description\":\"相机原子能力的统一返回结构。\\n\\n 字段语义对齐《原子能力指导文档》中推荐的 FunctionResult；当前这两个「拉起相机」\\n 能力不返回业务数据，因此只保留 code \\/ message \\/ success 三个字段。\\n\\n @property code 错误码。0 表示成功；401 无相机权限；403 相机被占用\\/拉起失败；500 内部异常。\\n @property message 结果描述，失败时为错误信息。\\n @property success 能力是否执行成功。\",\"qualifiedName\":\"com.stepos.media.camera.appfunctions.CameraLaunchResult\",\"required\":[\"code\",\"message\",\"success\"],\"properties\":{\"code\":{\"kind\":\"int\",\"isNullable\":false,\"description\":\"\"},\"message\":{\"kind\":\"string\",\"isNullable\":false,\"description\":\"\"},\"success\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}}}}",
+      "jetpackParametersJson": "[{\"name\":\"start\",\"isRequired\":true,\"description\":\"必填。true 表示开始录像，false 表示停止录像。\",\"dataType\":{\"kind\":\"boolean\",\"isNullable\":false,\"description\":\"\"}}]",
+      "slaScene": "2"
+    },
+    "slaScene": "2",
+    "pendingApproval": null
   }
 ]
