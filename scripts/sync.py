@@ -181,10 +181,6 @@ def main():
     git("add", "-A")
     git("commit", "-m", "sync %s: +%d ~%d -%d" % (now.strftime("%Y-%m-%d"), len(added), len(updated), len(removed)))
 
-    if os.environ.get("STEPX_PUSH_GITHUB") != "1":
-        print("LOCAL_ONLY: 已本地提交，未推送 GitHub（如需推送请设置 STEPX_PUSH_GITHUB=1）")
-        return
-
     last_error = ""
     for attempt in range(3):
         proc = subprocess.run(["git", "push", "origin", "HEAD"], cwd=str(ROOT), capture_output=True, text=True)
