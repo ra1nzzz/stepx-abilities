@@ -28,3 +28,10 @@
   - `camera_set_video_frame_rate`（相机）
   - `camera_capture_with_countdown`（相机）
   - `camera_toggle_recording`（相机）
+
+## 2026-10-23
+
+- 更新 1 项
+  - `appstore_search_app`（应用商店）
+- 移除 1 项
+  - `stop_speak_text`（通用原子能力）

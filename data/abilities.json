@@ -10985,7 +10985,7 @@
     "name": "appstore_search_app",
     "tool_alias_for_agent": "appstore_search_app",
     "functionName": "com.stepos.appcenter.appfunctions.AppStoreFunctions#searchApp",
-    "description": "# description\n 在应用商店里**搜索 / 查询 / 查找**应用——跳到商店搜索页并自动按关键词检索，结果由商店\n 原生页面展示。**只查询，不下载、不安装**；用户意图是下载/安装时应改走 [installApp]。\n\n **动词归一化**：搜索 / 搜 / 查询 / 查 / 查找 / 找 / 看看有没有 / 应用商店里有没有 → 本函数。\n\n # positive_samples\n - 在应用商店搜一下咪咕音乐\n - 帮我搜索修图软件\n - 查一下视频剪辑相关的应用\n - 查询微信\n - 查找学习类 app\n - 帮我找一下番茄小说\n - 应用商店里有没有 QQ 音乐\n - 看看有哪些天气应用\n\n # negative_samples\n - 帮我下载咪咕音乐 → 应走 [installApp]\n - 帮我装一下微信 → 应走 [installApp]\n - 把支付宝下下来 → 应走 [installApp]\n\n # return\n 返回 [AppActionResult]：code=0 已跳搜索页（结果由商店页承载，\"搜不到\"也不会以 code≠0\n 反馈）；1 关键词为空；6 跳转出错；10501 用户未同意应用商店隐私协议。",
+    "description": "# description\n 在应用商店里**搜索 / 查询 / 查找**应用——跳到商店搜索页并自动按关键词检索，结果由商店\n 原生页面展示。**只查询，不下载、不安装**；\n\n **动词归一化**：搜索 / 搜 / 查询 / 查 / 查找 / 找 / 看看有没有 / 应用商店里有没有 → 本函数。\n\n # positive_samples\n - 在应用商店搜一下咪咕音乐\n - 帮我搜索修图软件\n - 查一下视频剪辑相关的应用\n - 查询微信\n - 查找学习类 app\n - 帮我找一下番茄小说\n - 应用商店里有没有 QQ 音乐\n - 看看有哪些天气应用\n\n # return\n 返回 [AppActionResult]：code=0 已跳搜索页（结果由商店页承载，\"搜不到\"也不会以 code≠0\n 反馈）；1 关键词为空；6 跳转出错；10501 用户未同意应用商店隐私协议。",
     "type": "工具",
     "capabilityType": "系统设置",
     "callType": "FUNCTION_CALL",
@@ -17364,39 +17364,6 @@
           "description": "本次震动的持续时长，单位为毫秒（ms），必填整数，范围 1～60000（含边界，最多 60 秒）。例如震动 2 秒传 2000。不能为 null，不接受字符串或带小数部分的数值。"
         }
       }
-    },
-    "outputSchema": null,
-    "extra": {
-      "slaScene": "1"
-    },
-    "slaScene": "1",
-    "pendingApproval": null
-  },
-  {
-    "abilityVersionId": 24349,
-    "abilityId": 3382,
-    "appName": "通用原子能力",
-    "appDesc": "提供系统通用能力，应用开启及卸载、文件上传、获取设备及系统信息等",
-    "appSource": "INTER_APP",
-    "packageName": "com.stepos.common.ability.proxy",
-    "appId": 472,
-    "toolUniqueName": "472_stop_speak_text_10011",
-    "name": "stop_speak_text",
-    "tool_alias_for_agent": "stop_speak_text",
-    "functionName": "stop_speak_text",
-    "description": "# description\n停止本应用当前的语音播报或朗读（由 speak_text 发起），支持跨会话停止。当前会话无需有 speak_text 的调用历史：即使播报由其他会话发起，或当前上下文无法确认是否有播报，只要用户明确要求停止播报或朗读，就应直接调用本工具，无需先查询播放状态，也无需追问原会话。本工具会取消当前合成任务并清理待播音频。只结束当前这一句，不支持从断点继续；不暂停其他应用的音乐或视频，不关闭麦克风，不修改系统音量，也不阻止后续播报。无需参数，传入的参数会被忽略；没有正在进行的播报时也正常返回「已停止语音播报」。归还音频焦点后，之前被播报打断的音乐可能自行恢复。\n\n# positive_samples\n- 停止语音播报\n- 停止朗读\n- 别读了\n- 别念了\n- 停止刚才的语音播报\n- 停掉另一个会话里开始的语音播报\n\n# negative_samples\n- 暂停音乐或视频 → 媒体控制，不是停止语音播报\n- 关闭麦克风 → 麦克风设置，不是停止语音播报\n- 把这段话读出来 → 应走 speak_text",
-    "type": "",
-    "capabilityType": "",
-    "callType": "MCP",
-    "authType": "APP_SIGN",
-    "permission": "2",
-    "appVersion": "10011",
-    "callingMethod": "LOCAL",
-    "timeout": "60",
-    "deviceType": "PHONE",
-    "inputSchema": {
-      "type": "object",
-      "required": []
     },
     "outputSchema": null,
     "extra": {
