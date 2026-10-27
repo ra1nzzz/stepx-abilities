@@ -35,3 +35,18 @@
   - `appstore_search_app`（应用商店）
 - 移除 1 项
   - `stop_speak_text`（通用原子能力）
+
+## 2026-10-27
+
+- 新增 1 项
+  - `stop_vibration`（通用原子能力）
+- 更新 9 项
+  - `maps_direction_transit_integrated`（高德云端MCP）
+  - `maps_distance`（高德云端MCP）
+  - `maps_geo`（高德云端MCP）
+  - `maps_schema_personal_map`（高德云端MCP）
+  - `maps_search_detail`（高德云端MCP）
+  - `maps_text_search`（高德云端MCP）
+  - `amap_overview_card`（高德）
+  - `amap_poi_detail_card`（高德）
+  - `amap_route_card`（高德）
