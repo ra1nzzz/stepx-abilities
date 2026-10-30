@@ -50,3 +50,70 @@
   - `amap_overview_card`（高德）
   - `amap_poi_detail_card`（高德）
   - `amap_route_card`（高德）
+
+## 2026-10-30
+
+- 新增 21 项
+  - `set_back_screen_enabled`（通用原子能力）
+  - `get_back_screen_enabled`（通用原子能力）
+  - `settings_open_language`（设置）
+  - `settings_open_feedback`（设置）
+  - `get_back_screen_auto_brightness`（通用原子能力）
+  - `set_back_screen_auto_brightness`（通用原子能力）
+  - `get_back_screen_brightness`（通用原子能力）
+  - `set_back_screen_brightness`（通用原子能力）
+  - `get_back_screen_camera_link`（通用原子能力）
+  - `set_back_screen_camera_link`（通用原子能力）
+  - `get_back_screen_auto_rotate`（通用原子能力）
+  - `set_back_screen_auto_rotate`（通用原子能力）
+  - `get_back_screen_display_mode`（通用原子能力）
+  - `set_back_screen_display_mode`（通用原子能力）
+  - `get_back_screen_basic_type`（通用原子能力）
+  - `set_back_screen_basic_type`（通用原子能力）
+  - `set_back_screen_frame`（通用原子能力）
+  - `clear_back_screen_frame`（通用原子能力）
+  - `wake_up_back_screen`（通用原子能力）
+  - `sleep_back_screen`（通用原子能力）
+  - `get_back_screen_display_info`（通用原子能力）
+- 更新 235 项
+  - `gallery_get_latest_media`（图库）
+  - `gallery_get_media_by_time_range`（图库）
+  - `gallery_open_picture_editor`（图库）
+  - `gallery_ai_extend_image`（图库）
+  - `gallery_add_picture_text`（图库）
+  - `gallery_add_picture_watermark`（图库）
+  - `gallery_add_picture_mosaic`（图库）
+  - `gallery_edit_picture_paint`（图库）
+  - `gallery_add_picture_filter`（图库）
+  - `gallery_reduce_picture_resolution`（图库）
+  - `gallery_edit_picture_sharpen`（图库）
+  - `gallery_edit_picture_temperature`（图库）
+  - `gallery_edit_picture_saturation`（图库）
+  - `gallery_edit_picture_brightness`（图库）
+  - `gallery_edit_picture_aspect_ratio`（图库）
+  - `gallery_edit_picture_degree`（图库）
+  - `gallery_edit_picture_flip`（图库）
+  - `gallery_open_video_editor`（图库）
+  - `gallery_open_video_player`（图库）
+  - `gallery_intelligent_search`（图库）
+  - `gallery_local_search`（图库）
+  - `gallery_create_album`（图库）
+  - `gallery_rename_album`（图库）
+  - `gallery_copy_files_to_album`（图库）
+  - `gallery_move_media_to_album`（图库）
+  - `gallery_hide_album`（图库）
+  - `gallery_set_album_cover`（图库）
+  - `gallery_open_trash_bin`（图库）
+  - `gallery_open_hidden_album`（图库）
+  - `gallery_select_media_file_card`（图库）
+  - `gallery_get_sticker_columns`（图库）
+  - `gallery_get_stickers`（图库）
+  - `gallery_get_local_stickers`（图库）
+  - `gallery_get_style_templates`（图库）
+  - `gallery_get_photo_info`（图库）
+  - `gallery_get_video_info`（图库）
+  - `gallery_copy_media`（图库）
+  - `gallery_move_to_folder`（图库）
+  - `gallery_restore_media_from_trash`（图库）
+  - `gallery_get_trash_media_list`（图库）
+  - …共 235 项

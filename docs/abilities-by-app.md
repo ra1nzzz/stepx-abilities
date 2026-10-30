@@ -1,6 +1,6 @@
 # 原子能力明细（按 App 分组）
 
-快照时间：2026-10-27 09:03（UTC+8）　·　共 360 项能力 / 38 个 App
+快照时间：2026-10-30 09:04（UTC+8）　·　共 381 项能力 / 38 个 App
 
 > 入参 / 出参的完整 JSON Schema 见 `data/abilities.json`。
 
@@ -8,7 +8,7 @@
 
 ## 设置
 
-`com.android.settings`　·　54 项能力　·　手机系统设置项查询及管理
+`com.android.settings`　·　56 项能力　·　手机系统设置项查询及管理
 
 | 能力 | 说明 | 执行 | 鉴权 |
 |---|---|---|---|
@@ -53,6 +53,8 @@
 | `settings_hotspot_switch` | 直接开启或关闭个人热点。 ｜正例： - 打开热点 - 关闭热点 - 开个人热点 - 关热点 - 共享网络 ｜反例： - 打开热点设置入口 → 应走 connectivitysettings_open_settings_tether_settings_activity | LOCAL | APP_SIGN |
 | `settings_liftToCheck_phone_switch` | 打开/关闭拿起手机即显示功能，打开/关闭抬起亮屏功能，打开/关闭抬起唤醒功能。开关类的原子能力，可以快速更新“拿起手机即显示”开关的状态，以满足用户的日常使用。优先调用该原子能力，不要模拟调用。 | LOCAL | APP_SIGN |
 | `settings_one_handed_mode_switch` | 直接开启或关闭单手模式。 ｜正例： - 打开单手模式 - 关闭单手模式 - 开启单手操作 | LOCAL | APP_SIGN |
+| `settings_open_feedback` | 打开帮助和反馈首页。不要打开选择反馈分类。 ｜正例： - 打开帮助和反馈 - 进入帮助和反馈 - 打开帮助与反馈 ｜反例： - 选择反馈分类 → 不要打开这一页 - 我要提交问题反馈 → 应走 feedback_submit_question - 打开设置主页 → 应走 settings_open_settings_h… | LOCAL | APP_SIGN |
+| `settings_open_language` | 打开语言和输入法页面。说打开输入法设置就进这一页。 ｜正例： - 打开输入法设置 - 打开语言和输入法 - 进入语言和输入法 ｜反例： - 打开设置主页 → 应走 settings_open_settings_homepage_activity - 只切换系统语言 → 应走 settings_adjust_system… | LOCAL | APP_SIGN |
 | `settings_open_manage_applications` | 打开所有应用页面。它显示所有已安装的应用。此页面允许您查看所有已安装的应用。 | LOCAL | APP_SIGN |
 | `settings_open_settings_device_info_settings_activity` | 打开/进入“关于本机”界面。此界面显示手机型号、系统版本号以及设备标识符（IP 地址、MAC 地址、蓝牙地址等）等信息。 | LOCAL | APP_SIGN |
 | `settings_open_settings_homepage_activity` | 打开系统设置主页面。 ｜正例： - 打开设置 - 进入系统设置 - 打开手机设置 - 去设置主页 ｜反例： - 打开网络设置 → 应走 connectivitysettings_open_settings_wireless_settings_activity - 进入 SIM 卡设置 → 应走 connectivity… | LOCAL | APP_SIGN |
@@ -121,6 +123,58 @@
 | `gallery_set_album_cover` | 在图库中将指定相册的封面设置为指定图片。 ｜正例： - 把旅行相册的封面换成这张图 - 用这张照片当相册封面 - 帮我把这个相册的封面图设一下 | LOCAL | APP_SIGN |
 | `gallery_share_media` | 在图库中调起系统分享，将指定路径的图片或视频分享给其他应用。 ｜正例： - 分享这张照片 - 把这个视频发给其他应用 - 用系统分享把这张图发出去 - 发微信 | LOCAL | APP_SIGN |
 | `gallery_unhide_media` | 在图库中取消隐藏指定媒体文件，使其恢复在相册中显示。 ｜正例： - 把这张图取消隐藏 - 让这段视频重新显示在相册里 - 把这个媒体文件恢复显示 - 别藏这张照片了，显示回来 | LOCAL | APP_SIGN |
+
+## 通用原子能力
+
+`com.stepos.common.ability.proxy`　·　45 项能力　·　提供系统通用能力，应用开启及卸载、文件上传、获取设备及系统信息等
+
+| 能力 | 说明 | 执行 | 鉴权 |
+|---|---|---|---|
+| `batch_file_upload` | 上传本地文件到服务端（批量），适用于只需要发起批量上传、不要求一次性返回全部文件结果或实时进度的场景。 ｜正例： - 上传文件 - 把这些文件传上去 - 批量上传这些文件 ｜反例： - 批量上传文件并一次性返回所有上传结果 → 应走 batch_file_upload_return_all - 批量上传这些文件并实时显… | LOCAL | APP_SIGN |
+| `batch_file_upload_all_progress` | 批量上传本地文件，并通过 progressToken 实时返回上传进度。适用于需要展示上传百分比、监听状态变化或处理单个文件失败原因的场景。 ｜正例： - 上传文件看进度 - 批量上传并监听进度 - 显示上传百分比 ｜反例： - 批量上传这些文件 → 应走 batch_file_upload - 批量上传文件并一次性返… | LOCAL | APP_SIGN |
+| `batch_file_upload_return_all` | 批量上传本地文件，并在全部文件处理完成后一次性返回所有上传结果。适用于只关心最终结果、不需要实时进度的场景。 ｜正例： - 批量上传文件 - 上传一批文件并拿到结果 - 把这些本地文件都上传并返回结果 ｜反例： - 批量上传文件并显示上传进度 → 应走 batch_file_upload_all_progress - … | LOCAL | APP_SIGN |
+| `check_app_installed_by_name` | 通过应用显示名称检查指定应用是否已安装。当前按系统应用列表中的显示名称忽略大小写匹配：优先完全匹配，未命中时按显示名前缀匹配以兼容简称（如“携程”命中“携程旅行”）；仍未命中时返回 false。 ｜正例： - 看看我手机上装没装微信 - 帮我查一下有没有安装淘宝 - 确认一下抖音是不是已安装 ｜反例： - 通过包名检查… | LOCAL | APP_SIGN |
+| `check_app_installed_by_package` | 通过 Android 应用包名检查对应应用是否已安装。包名为空时返回参数错误；包名合法但设备上不存在时返回 false。 ｜正例： - 检查 com.tencent.mm 这个包名装没装 - 查一下包名 com.example.app 的应用有没有安装 - 帮我看看这个 packageName 对应的应用是否已安装 ｜… | LOCAL | APP_SIGN |
+| `clear_back_screen_frame` | 清除刚刚通过 set_back_screen_frame 下发的自定义点阵，退出自定义帧模式并恢复当前 agent 状态显示。没有自定义帧时调用也安全。 ｜正例： - 清掉背屏上刚画的图案 - 取消副屏自定义显示 - 恢复背屏原来的 agent 动画 ｜反例： - 推送一张新的自定义点阵 → 应走 set_back_s… | LOCAL | APP_SIGN |
+| `common_ability_check_app_permission` | 按应用包名和 Android 权限常量检查应用是否拥有指定权限。permissionName 应使用 android.permission.CAMERA、android.permission.RECORD_AUDIO、android.permission.ACCESS_FINE_LOCATION 等系统权限名；不建议直… | LOCAL | APP_SIGN |
+| `common_ability_clipboard_text` | 获取系统剪贴板中的文本内容。仅用于读取文本类型内容；剪贴板为空、当前内容不是文本或系统限制读取时，按实际读取结果返回空文本或错误信息。 ｜正例： - 剪贴板文字是什么 - 复制的内容是什么 - 读一下剪贴板文字 ｜反例： - 复制这段文字到剪贴板 → 不应走本能力 - 清空剪贴板 → 不应走本能力 | LOCAL | APP_SIGN |
+| `common_ability_get_app_count` | 获取当前手机已安装的第三方应用总个数，不包含系统预装应用。适用于用户只关心第三方应用数量、不需要完整应用列表的场景。 ｜正例： - 装了多少个第三方应用 - 已安装 app 有几个 - 第三方应用数量是多少 ｜反例： - 列出已安装的第三方应用 → 应走 common_ability_get_app_list - 检查… | LOCAL | APP_SIGN |
+| `common_ability_get_app_list` | 获取当前手机已安装的第三方应用列表，返回应用名称和包名等信息。不包含系统预装应用。适用于用户想查看设备上安装了哪些第三方应用的场景。 ｜正例： - 列出已安装的第三方应用 - 看看装了哪些 app - 获取第三方应用列表 ｜反例： - 获取已安装应用数量 → 应走 common_ability_get_app_coun… | LOCAL | APP_SIGN |
+| `common_ability_get_app_permissions` | 按应用包名获取应用的非普通权限使用详情，包括位置、相机、麦克风等敏感权限的授权状态或使用信息。适用于查看指定包名应用的权限列表和权限使用详情。 ｜正例： - 查看这个应用的权限列表 - 这个应用用了哪些权限 - 查看指定包名应用的权限使用详情 ｜反例： - 检查应用是否有某一个权限 → 应走 common_abilit… | LOCAL | APP_SIGN |
+| `common_ability_get_app_versioncode` | 根据 Android 应用包名获取指定已安装应用的 versionCode。包名为空时返回参数错误；应用未安装或查询失败时按实现返回错误或 -1。 ｜正例： - 获取 com.tencent.mm 的 versionCode - 查下指定包名应用的版本号 - 帮我查一下某个应用包名的 versionCode ｜反例： … | LOCAL | APP_SIGN |
+| `common_ability_get_screen_size` | 获取当前手机屏幕的完整物理分辨率，包括屏幕宽度和高度，单位为像素 px。 ｜正例： - 屏幕多大 - 我手机屏幕尺寸是多少 - 屏幕分辨率是多少 - 屏幕宽高是多少 ｜反例： - 调整屏幕分辨率 → 不应走本能力 - 修改屏幕缩放比例 → 不应走本能力 | LOCAL | APP_SIGN |
+| `common_ability_has_face_rec` | 查询当前手机硬件是否支持人脸识别功能。只判断设备能力支持情况，不代表当前已录入人脸或已开启人脸解锁。 ｜正例： - 手机支不支持人脸识别 - 能用刷脸吗 - 支持面部识别吗 - 可以刷脸解锁吗 ｜反例： - 设置人脸解锁 → 不应走本能力 - 录入人脸信息 → 不应走本能力 | LOCAL | APP_SIGN |
+| `common_ability_has_fingerprint` | 查询当前手机硬件是否支持指纹识别功能。只判断设备能力支持情况，不代表当前已录入指纹或已开启指纹解锁。 ｜正例： - 手机有指纹吗 - 支持指纹识别吗 - 能指纹解锁吗 - 指纹功能支持不 ｜反例： - 设置指纹解锁 → 不应走本能力 - 录入新的指纹 → 不应走本能力 | LOCAL | APP_SIGN |
+| `get_back_screen_auto_brightness` | 查询背屏自动背光开关是否打开。只读，不修改设置。 ｜正例： - 背屏自动亮度开着吗 - 副屏是不是自动背光 ｜反例： - 打开/关闭背屏自动背光 → 应走 set_back_screen_auto_brightness - 查询/调节手动亮度 → 应走 get_back_screen_brightness / set_… | LOCAL | APP_SIGN |
+| `get_back_screen_auto_rotate` | 查询背屏横竖屏适配（自动旋转）开关是否打开。 ｜正例： - 背屏会不会自动旋转 - 副屏横竖屏适配开着吗 ｜反例： - 打开/关闭横竖屏适配 → 应走 set_back_screen_auto_rotate | LOCAL | APP_SIGN |
+| `get_back_screen_basic_type` | 查询背屏待机显示类型：agent 默认动画、time 时间、text 自定义文本。类型为 text 时同时返回当前文本。 ｜正例： - 背屏待机显示的是什么 - 副屏现在是时钟还是自定义文字 ｜反例： - 改成时间 / 自定义文字 → 应走 set_back_screen_basic_type | LOCAL | APP_SIGN |
+| `get_back_screen_brightness` | 查询背屏手动亮度，范围为 1–255。返回的是已存储的手动档；若自动背光开着，该值暂不作用于面板。 ｜正例： - 背屏亮度是多少 - 副屏手动亮度调到几了 ｜反例： - 把背屏调亮/调暗 → 应走 set_back_screen_brightness - 打开/关闭自动背光 → 应走 set_back_screen_a… | LOCAL | APP_SIGN |
+| `get_back_screen_camera_link` | 查询背屏相机联动开关是否打开。打开时占用相机可在背屏显示相机相关状态。 ｜正例： - 背屏相机联动开了吗 - 副屏拍照联动是不是开着 ｜反例： - 打开/关闭相机联动 → 应走 set_back_screen_camera_link | LOCAL | APP_SIGN |
+| `get_back_screen_display_info` | 查询背屏当前显示信息，包含亮灭状态（Display.state）、逻辑宽高、旋转角度、当前亮度。只读，不修改任何设置。 ｜正例： - 背屏现在亮着吗 - 查一下副屏宽高和亮度 - 背屏当前状态是什么 ｜反例： - 点亮/熄灭背屏 → 应走 wake_up_back_screen / sleep_back_screen … | LOCAL | APP_SIGN |
+| `get_back_screen_display_mode` | 查询背屏显示模式：auto 智能显示、always 始终显示、custom 定时显示，并返回定时窗口起止（距午夜的分钟数及时钟时间）。 ｜正例： - 背屏现在是智能显示还是常亮 - 副屏定时亮屏从几点到几点 ｜反例： - 改成始终显示 / 定时显示 → 应走 set_back_screen_display_mode -… | LOCAL | APP_SIGN |
+| `get_back_screen_enabled` | 查询手机背屏（副屏）总开关当前是否打开。只读状态，不修改任何设置。 ｜正例： - 背屏开着吗 - 副屏现在是开还是关 - 查一下背屏开关状态 ｜反例： - 打开/关闭背屏 → 应走 set_back_screen_enabled - 背屏亮度是多少 → 不应走本能力 | LOCAL | APP_SIGN |
+| `open_app_by_name` | 根据应用显示名称打开应用，可选传入 Activity class name 打开具体 Activity。当前按系统应用列表中的显示名称忽略大小写匹配：优先完全匹配，未命中时按显示名前缀匹配以兼容简称（如“携程”命中“携程旅行”），多个命中时取显示名最短者；未找到应用、无默认启动入口或指定 Activity 启动失败时返… | LOCAL | APP_SIGN |
+| `open_app_by_package` | 根据 Android 应用包名打开应用；仅传 packageName 时启动该应用的默认入口 Activity，同时传 packageName 与 className 时直接启动指定 Activity。适用于用户明确提供包名或需要打开指定包名 Activity 的场景。 ｜正例： - 按包名打开应用 - 启动 com.… | LOCAL | APP_SIGN |
+| `open_url_with_browser` | 打开浏览器应用，并传入 URL 打开具体网页。url 必须以 http:// 或 https:// 开头；不支持缺少协议的地址、file:// 或本地路径。 ｜正例： - 用浏览器打开 https://www.baidu.com/ - 打开这个网页链接 - 帮我在浏览器里打开 URL ｜反例： - 打开浏览器应用 → … | LOCAL | APP_SIGN |
+| `proxy_third_party_ability_alipay_life_service` | 支付宝「服务直达」原子能力入口 —— 覆盖智跃星辰服务直达 P0 场景，让用户在**支付宝**内 完成以下明确范围的生活服务。 ## 高频强支持意图（命中即强路由到本能力，勿让给地图/POI/外卖等其它 agent） 以下两类是高频核心场景，**只要 query 命中（含出现在复合 query 的任一子句里）就必须强路… | LOCAL | APP_SIGN |
+| `proxy_third_party_ability_alipay_mcp_service` | 支付宝「对话内闭环」原子能力入口 —— 支付宝下发卡片，**卡片直接渲染在助手对话内、全程不跳转 支付宝**，用户在卡片上选规格 / 确认订单后由调用方回传，形成「推荐 → 下单 → 履约·核销状态查询」 的多轮闭环。 ## 优先级：本能力最高，命中即强路由 本能力覆盖的场景，与支付宝 xUI 服务执行（`proxy_… | LOCAL | APP_SIGN |
+| `proxy_third_party_ability_alipay_xui_service` | 支付宝 xUI「服务执行」原子能力入口 ｜返回： 返回 [AlipayXuiServiceResult]：`code=0`（且 `_meta.metas` 中 `executionState=COMPLETED`）为执行成功； 10001/10002/10003/10004 入参非法（10004 为缺少有效 `para… | LOCAL | APP_SIGN |
+| `proxy_third_party_ability_capcut_creation` | 剪映（CapCut）AI 创作原子能力入口 —— 让用户用一句话，由**剪映**创作 Agent 完成视频 / 图片 / 音乐等短视频创作，并把成片 / 草稿产物回传。命中以下创作意图时云端应路由到本能力，由剪映侧 创作 Agent 完成精准的创作模式判定与素材编排，工具层负责与剪映 App 建立会话、上传本地素材、 … | LOCAL | APP_SIGN |
+| `proxy_third_party_ability_wechat_voice_control` | 微信语音控制原子能力。Amoo 将用户原始语音以 16kHz/单声道/PCM16 传入，由微信完成联系人识别、 消息内容理解、确认 UI 和消息/音视频电话执行。本能力按 contextId 维持多轮 OVC Session；返回的 content 应由 Amoo 使用 TTS 播报。只适用于发微信消息、微信语音电话和… | LOCAL | APP_SIGN |
+| `set_back_screen_auto_brightness` | 打开或关闭背屏自动背光。打开后按环境光自动调节；关闭后使用手动亮度。 ｜正例： - 打开背屏自动亮度 - 关掉副屏自动背光 ｜反例： - 查询自动背光状态 → 应走 get_back_screen_auto_brightness - 把背屏调亮/调暗到具体数值 → 应走 set_back_screen_brightne… | LOCAL | APP_SIGN |
+| `set_back_screen_auto_rotate` | 打开或关闭背屏横竖屏适配。打开后主屏亮起时背屏跟随设备姿态旋转。 ｜正例： - 打开背屏自动旋转 - 关掉副屏横竖屏适配 ｜反例： - 查询横竖屏适配状态 → 应走 get_back_screen_auto_rotate | LOCAL | APP_SIGN |
+| `set_back_screen_basic_type` | 设置背屏待机显示。type=agent 默认动画，time 时间，text 自定义文本。选 text 时必须同时传 text。内置字库仅支持大写 A-Z、数字 0-9 以及 ! - ? 空格共 40 个字符（小写会自动转大写）。含中文时本能力会改走 set_back_screen_frame 点阵显示，最多 6 个字。… | LOCAL | APP_SIGN |
+| `set_back_screen_brightness` | 设置背屏手动亮度，范围为 1–255。设置时会自动关闭自动背光，使该值立即生效。面板在 1、2 档时观感与 3 档相同，调用方无需自行抬底。 ｜正例： - 把背屏亮度调到 128 - 副屏调亮一点到 200 - 背屏亮度设为最暗 ｜反例： - 查询当前亮度 → 应走 get_back_screen_brightness… | LOCAL | APP_SIGN |
+| `set_back_screen_camera_link` | 打开或关闭背屏相机联动。打开后占用相机时背屏可显示相机图标等状态；关闭会清掉硬件占用的相机 SPECIAL 槽。 ｜正例： - 打开背屏相机联动 - 关闭副屏拍照联动 ｜反例： - 查询相机联动状态 → 应走 get_back_screen_camera_link - 打开相机应用 → 应走 open_app_by_n… | LOCAL | APP_SIGN |
+| `set_back_screen_display_mode` | 设置背屏显示模式。auto=智能显示（事件点亮后超时熄灭），always=始终显示，custom=定时显示（窗口内常亮，窗外等同智能显示）。定时显示可同时传 customStart / customEnd，单位是距午夜的分钟数，例如早上 8 点为 8×60=480，晚上 22 点为 1320。 ｜正例： - 把背屏设为… | LOCAL | APP_SIGN |
+| `set_back_screen_enabled` | 打开或关闭手机背屏（副屏）总开关。关闭后背屏不再点亮；打开后按系统当前显示策略（智能亮屏 / 常亮 / 定时）工作。仅控制总开关，不调整亮度、常显内容或 Agent 动画状态。 ｜正例： - 打开背屏 - 关闭背屏 - 把副屏关掉 - 开启手机背面的屏幕 ｜反例： - 调背屏亮度 → 不应走本能力 - 把背屏切成时钟 … | LOCAL | APP_SIGN |
+| `set_back_screen_frame` | 向背屏推送一帧自定义点阵画面。画布固定为 17 列（x / 宽度）× 23 行（y / 高度），共 391 格。可传 frame 一维整数数组（下标 y * 17 + x，亮度 0–255，0 为灭），或传 text 由本能力把文字（含中文，最多 6 字）栅格化后下发。frame 与 text 二选一。 ｜正例： - … | LOCAL | APP_SIGN |
+| `show_notify_by_info` | 根据传入的标题、内容、PendingIntent 和图标生成并显示一条通知。该能力是底层通知展示接口，适用于系统服务、上层应用或后台任务主动展示自定义通知，不适合作为普通用户自然语言直接触发的能力。 ｜正例： - 系统服务根据标题、内容和跳转 intent 展示通知 - 后台任务完成后展示一条自定义通知 - 上层应用传… | LOCAL | APP_SIGN |
+| `show_widget_by_package_class` | 根据指定 packageName 和 Widget provider className 展示对应小组件。该能力要求明确传入小组件所属应用包名和完整类名，不负责随机选择小组件。 ｜正例： - 根据指定包名和类名展示小组件 - 展示 com.example.app 的指定 Widget - 按 Widget provid… | LOCAL | APP_SIGN |
+| `sleep_back_screen` | 熄灭背屏（sleepBackScreen）。与关闭背屏总开关不同，本能力只请求立刻灭屏，不修改总开关设置。 ｜正例： - 熄灭背屏 - 把副屏关掉亮屏 - 背屏休眠 ｜反例： - 关闭背屏总开关 → 应走 set_back_screen_enabled - 查询背屏亮灭状态 → 应走 get_back_screen_d… | LOCAL | APP_SIGN |
+| `start_vibration` | 立即让设备按指定时长进行一次震动，适用于即时触觉提示。重复调用会重新提交震动请求；不创建未来的定时提醒、不循环震动，也不修改系统的来电或通知震动设置。成功返回「已提交震动请求」及采用的时长和强度，不等待震动结束；到期由系统停止，也可调用 stop_vibration 提前取消。返回成功仅表示请求已提交，实际震动仍受硬件… | LOCAL | APP_SIGN |
+| `stop_vibration` | 取消当前震动。不关闭系统震动开关，也不禁止后续震动。无需参数，传入的参数会被忽略；成功返回「已提交取消震动请求」，没有正在进行的震动时也正常返回，不查询或报告当前震动状态。权限不足或系统服务异常时返回错误。 ｜正例： - 停止刚才的震动 - 取消你正在发起的震动 ｜反例： - 让手机震动 2 秒 → 应走 start_… | LOCAL | APP_SIGN |
+| `wake_up_back_screen` | 点亮背屏（wakeUpBackScreen）。与打开背屏总开关不同，本能力只请求立刻亮屏，不修改总开关设置。 ｜正例： - 点亮背屏 - 把副屏亮起来 - 唤醒背屏 ｜反例： - 打开背屏总开关 → 应走 set_back_screen_enabled - 查询背屏亮灭状态 → 应走 get_back_screen_d… | LOCAL | APP_SIGN |
 
 ## 电话
 
@@ -232,39 +286,6 @@
 | `filemanager_recovery_garbage_file` | 根据回收站文件真实路径恢复回收站中的单个文件。 # workflow 必须先调用 filemanager_get_garbage_file_list 获取 garbagePath，再传入本接口；批量或全部恢复请使用 filemanager_recovery_garbage_files。 ｜正例： - 把回收站里的这个文… | LOCAL | APP_SIGN |
 | `filemanager_recovery_garbage_files` | 批量恢复文件管理回收站中的文件，支持按 garbagePath 列表、originalPath 前缀或全部恢复。 # workflow 1. 先调用 filemanager_get_garbage_file_list 获取回收站列表。 2. 全部恢复：restoreAll=true。 3. 恢复指定目录（如 Downl… | LOCAL | APP_SIGN |
 | `filemanager_search_file` | 在文件管理中根据关键词搜索或查询文件、文件夹。 ｜正例： - 帮我搜索一下文件名里有合同的文件 - 查找名字里有照片的文件夹 - 在文件管理里搜一下包含报告的文件 ｜反例： - 查一下手机里的 apk 文件列表 → 应走 filemanager_get_apk_file_list ｜返回： 返回 JSON 数组，每项包… | LOCAL | APP_SIGN |
-
-## 通用原子能力
-
-`com.stepos.common.ability.proxy`　·　26 项能力　·　提供系统通用能力，应用开启及卸载、文件上传、获取设备及系统信息等
-
-| 能力 | 说明 | 执行 | 鉴权 |
-|---|---|---|---|
-| `batch_file_upload` | 上传本地文件到服务端（批量），适用于只需要发起批量上传、不要求一次性返回全部文件结果或实时进度的场景。 ｜正例： - 上传文件 - 把这些文件传上去 - 批量上传这些文件 ｜反例： - 批量上传文件并一次性返回所有上传结果 → 应走 batch_file_upload_return_all - 批量上传这些文件并实时显… | LOCAL | APP_SIGN |
-| `batch_file_upload_all_progress` | 批量上传本地文件，并通过 progressToken 实时返回上传进度。适用于需要展示上传百分比、监听状态变化或处理单个文件失败原因的场景。 ｜正例： - 上传文件看进度 - 批量上传并监听进度 - 显示上传百分比 ｜反例： - 批量上传这些文件 → 应走 batch_file_upload - 批量上传文件并一次性返… | LOCAL | APP_SIGN |
-| `batch_file_upload_return_all` | 批量上传本地文件，并在全部文件处理完成后一次性返回所有上传结果。适用于只关心最终结果、不需要实时进度的场景。 ｜正例： - 批量上传文件 - 上传一批文件并拿到结果 - 把这些本地文件都上传并返回结果 ｜反例： - 批量上传文件并显示上传进度 → 应走 batch_file_upload_all_progress - … | LOCAL | APP_SIGN |
-| `check_app_installed_by_name` | 通过应用显示名称检查指定应用是否已安装。当前按系统应用列表中的显示名称忽略大小写匹配：优先完全匹配，未命中时按显示名前缀匹配以兼容简称（如“携程”命中“携程旅行”）；仍未命中时返回 false。 ｜正例： - 看看我手机上装没装微信 - 帮我查一下有没有安装淘宝 - 确认一下抖音是不是已安装 ｜反例： - 通过包名检查… | LOCAL | APP_SIGN |
-| `check_app_installed_by_package` | 通过 Android 应用包名检查对应应用是否已安装。包名为空时返回参数错误；包名合法但设备上不存在时返回 false。 ｜正例： - 检查 com.tencent.mm 这个包名装没装 - 查一下包名 com.example.app 的应用有没有安装 - 帮我看看这个 packageName 对应的应用是否已安装 ｜… | LOCAL | APP_SIGN |
-| `common_ability_check_app_permission` | 按应用包名和 Android 权限常量检查应用是否拥有指定权限。permissionName 应使用 android.permission.CAMERA、android.permission.RECORD_AUDIO、android.permission.ACCESS_FINE_LOCATION 等系统权限名；不建议直… | LOCAL | APP_SIGN |
-| `common_ability_clipboard_text` | 获取系统剪贴板中的文本内容。仅用于读取文本类型内容；剪贴板为空、当前内容不是文本或系统限制读取时，按实际读取结果返回空文本或错误信息。 ｜正例： - 剪贴板文字是什么 - 复制的内容是什么 - 读一下剪贴板文字 ｜反例： - 复制这段文字到剪贴板 → 不应走本能力 - 清空剪贴板 → 不应走本能力 | LOCAL | APP_SIGN |
-| `common_ability_get_app_count` | 获取当前手机已安装的第三方应用总个数，不包含系统预装应用。适用于用户只关心第三方应用数量、不需要完整应用列表的场景。 ｜正例： - 装了多少个第三方应用 - 已安装 app 有几个 - 第三方应用数量是多少 ｜反例： - 列出已安装的第三方应用 → 应走 common_ability_get_app_list - 检查… | LOCAL | APP_SIGN |
-| `common_ability_get_app_list` | 获取当前手机已安装的第三方应用列表，返回应用名称和包名等信息。不包含系统预装应用。适用于用户想查看设备上安装了哪些第三方应用的场景。 ｜正例： - 列出已安装的第三方应用 - 看看装了哪些 app - 获取第三方应用列表 ｜反例： - 获取已安装应用数量 → 应走 common_ability_get_app_coun… | LOCAL | APP_SIGN |
-| `common_ability_get_app_permissions` | 按应用包名获取应用的非普通权限使用详情，包括位置、相机、麦克风等敏感权限的授权状态或使用信息。适用于查看指定包名应用的权限列表和权限使用详情。 ｜正例： - 查看这个应用的权限列表 - 这个应用用了哪些权限 - 查看指定包名应用的权限使用详情 ｜反例： - 检查应用是否有某一个权限 → 应走 common_abilit… | LOCAL | APP_SIGN |
-| `common_ability_get_app_versioncode` | 根据 Android 应用包名获取指定已安装应用的 versionCode。包名为空时返回参数错误；应用未安装或查询失败时按实现返回错误或 -1。 ｜正例： - 获取 com.tencent.mm 的 versionCode - 查下指定包名应用的版本号 - 帮我查一下某个应用包名的 versionCode ｜反例： … | LOCAL | APP_SIGN |
-| `common_ability_get_screen_size` | 获取当前手机屏幕的完整物理分辨率，包括屏幕宽度和高度，单位为像素 px。 ｜正例： - 屏幕多大 - 我手机屏幕尺寸是多少 - 屏幕分辨率是多少 - 屏幕宽高是多少 ｜反例： - 调整屏幕分辨率 → 不应走本能力 - 修改屏幕缩放比例 → 不应走本能力 | LOCAL | APP_SIGN |
-| `common_ability_has_face_rec` | 查询当前手机硬件是否支持人脸识别功能。只判断设备能力支持情况，不代表当前已录入人脸或已开启人脸解锁。 ｜正例： - 手机支不支持人脸识别 - 能用刷脸吗 - 支持面部识别吗 - 可以刷脸解锁吗 ｜反例： - 设置人脸解锁 → 不应走本能力 - 录入人脸信息 → 不应走本能力 | LOCAL | APP_SIGN |
-| `common_ability_has_fingerprint` | 查询当前手机硬件是否支持指纹识别功能。只判断设备能力支持情况，不代表当前已录入指纹或已开启指纹解锁。 ｜正例： - 手机有指纹吗 - 支持指纹识别吗 - 能指纹解锁吗 - 指纹功能支持不 ｜反例： - 设置指纹解锁 → 不应走本能力 - 录入新的指纹 → 不应走本能力 | LOCAL | APP_SIGN |
-| `open_app_by_name` | 根据应用显示名称打开应用，可选传入 Activity class name 打开具体 Activity。当前按系统应用列表中的显示名称忽略大小写匹配：优先完全匹配，未命中时按显示名前缀匹配以兼容简称（如“携程”命中“携程旅行”），多个命中时取显示名最短者；未找到应用、无默认启动入口或指定 Activity 启动失败时返… | LOCAL | APP_SIGN |
-| `open_app_by_package` | 根据 Android 应用包名打开应用；仅传 packageName 时启动该应用的默认入口 Activity，同时传 packageName 与 className 时直接启动指定 Activity。适用于用户明确提供包名或需要打开指定包名 Activity 的场景。 ｜正例： - 按包名打开应用 - 启动 com.… | LOCAL | APP_SIGN |
-| `open_url_with_browser` | 打开浏览器应用，并传入 URL 打开具体网页。url 必须以 http:// 或 https:// 开头；不支持缺少协议的地址、file:// 或本地路径。 ｜正例： - 用浏览器打开 https://www.baidu.com/ - 打开这个网页链接 - 帮我在浏览器里打开 URL ｜反例： - 打开浏览器应用 → … | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_alipay_life_service` | 支付宝「服务直达」原子能力入口 —— 覆盖智跃星辰服务直达 P0 场景，让用户在**支付宝**内 完成以下明确范围的生活服务。 ## 高频强支持意图（命中即强路由到本能力，勿让给地图/POI/外卖等其它 agent） 以下两类是高频核心场景，**只要 query 命中（含出现在复合 query 的任一子句里）就必须强路… | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_alipay_mcp_service` | 支付宝「对话内闭环」原子能力入口 —— 支付宝下发卡片，**卡片直接渲染在助手对话内、全程不跳转 支付宝**，用户在卡片上选规格 / 确认订单后由调用方回传，形成「推荐 → 下单 → 履约·核销状态查询」 的多轮闭环。 ## 优先级：本能力最高，命中即强路由 本能力覆盖的场景，与支付宝 xUI 服务执行（`proxy_… | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_alipay_xui_service` | 支付宝 xUI「服务执行」原子能力入口 ｜返回： 返回 [AlipayXuiServiceResult]：`code=0`（且 `_meta.metas` 中 `executionState=COMPLETED`）为执行成功； 10001/10002/10003/10004 入参非法（10004 为缺少有效 `para… | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_capcut_creation` | 剪映（CapCut）AI 创作原子能力入口 —— 让用户用一句话，由**剪映**创作 Agent 完成视频 / 图片 / 音乐等短视频创作，并把成片 / 草稿产物回传。命中以下创作意图时云端应路由到本能力，由剪映侧 创作 Agent 完成精准的创作模式判定与素材编排，工具层负责与剪映 App 建立会话、上传本地素材、 … | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_wechat_voice_control` | 微信语音控制原子能力。Amoo 将用户原始语音以 16kHz/单声道/PCM16 传入，由微信完成联系人识别、 消息内容理解、确认 UI 和消息/音视频电话执行。本能力按 contextId 维持多轮 OVC Session；返回的 content 应由 Amoo 使用 TTS 播报。只适用于发微信消息、微信语音电话和… | LOCAL | APP_SIGN |
-| `show_notify_by_info` | 根据传入的标题、内容、PendingIntent 和图标生成并显示一条通知。该能力是底层通知展示接口，适用于系统服务、上层应用或后台任务主动展示自定义通知，不适合作为普通用户自然语言直接触发的能力。 ｜正例： - 系统服务根据标题、内容和跳转 intent 展示通知 - 后台任务完成后展示一条自定义通知 - 上层应用传… | LOCAL | APP_SIGN |
-| `show_widget_by_package_class` | 根据指定 packageName 和 Widget provider className 展示对应小组件。该能力要求明确传入小组件所属应用包名和完整类名，不负责随机选择小组件。 ｜正例： - 根据指定包名和类名展示小组件 - 展示 com.example.app 的指定 Widget - 按 Widget provid… | LOCAL | APP_SIGN |
-| `start_vibration` | 立即让设备按指定时长进行一次震动，适用于即时触觉提示。重复调用会重新提交震动请求；不创建未来的定时提醒、不循环震动，也不修改系统的来电或通知震动设置。成功返回「已提交震动请求」及采用的时长和强度，不等待震动结束；到期由系统停止，也可调用 stop_vibration 提前取消。返回成功仅表示请求已提交，实际震动仍受硬件… | LOCAL | APP_SIGN |
-| `stop_vibration` | 取消当前震动。不关闭系统震动开关，也不禁止后续震动。无需参数，传入的参数会被忽略；成功返回「已提交取消震动请求」，没有正在进行的震动时也正常返回，不查询或报告当前震动状态。权限不足或系统服务异常时返回错误。 ｜正例： - 停止刚才的震动 - 取消你正在发起的震动 ｜反例： - 让手机震动 2 秒 → 应走 start_… | LOCAL | APP_SIGN |
 
 ## 百度网盘
 
