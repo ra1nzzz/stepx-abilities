@@ -117,3 +117,20 @@
   - `gallery_restore_media_from_trash`（图库）
   - `gallery_get_trash_media_list`（图库）
   - …共 235 项
+
+## 2026-10-31
+
+- 新增 2 项
+  - `amap_transit_route`（高德）
+  - `amap_distance`（高德）
+- 更新 8 项
+  - `maps_distance`（高德云端MCP）
+  - `maps_geo`（高德云端MCP）
+  - `maps_schema_personal_map`（高德云端MCP）
+  - `maps_search_detail`（高德云端MCP）
+  - `maps_text_search`（高德云端MCP）
+  - `amap_overview_card`（高德）
+  - `amap_poi_detail_card`（高德）
+  - `amap_route_card`（高德）
+- 移除 1 项
+  - `maps_direction_transit_integrated`（高德云端MCP）
