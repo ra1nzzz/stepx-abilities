@@ -134,3 +134,15 @@
   - `amap_route_card`（高德）
 - 移除 1 项
   - `maps_direction_transit_integrated`（高德云端MCP）
+
+## 2026-11-01
+
+- 新增 8 项
+  - `query_ticket`（携程）
+  - `query_tour`（携程）
+  - `query_bus`（携程）
+  - `car_rental`（携程）
+  - `query_content`（携程）
+  - `query_rank`（携程）
+  - `custom_tour`（携程）
+  - `query_restaurant`（携程）

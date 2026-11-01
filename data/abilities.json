@@ -11260,6 +11260,88 @@
     "pendingApproval": null
   },
   {
+    "abilityVersionId": 32515,
+    "abilityId": 3119,
+    "appName": "携程",
+    "appDesc": "携程航班搜索、酒店搜索、火车票搜索、景点搜索、旅行规划、旅行攻略",
+    "appSource": "EXTER_APP",
+    "packageName": null,
+    "appId": 489,
+    "toolUniqueName": "489_query_ticket_1.0.0",
+    "name": "query_ticket",
+    "tool_alias_for_agent": "query_ticket",
+    "functionName": "",
+    "description": "查询携程景点门票。该工具根据景点名称或城市（可结合主题标签、人群类型、省份、经纬度、排序）查询景点及其门票资源，结果包含景点名称、图片、评分、点评数、地址、景区等级、开放时间、榜单标签、推荐语、起价/市场价，以及每个票种（成人票、儿童票等）的价格、可订状态和购票链接。\n\n适用于“上海迪士尼门票多少钱”“北京故宫门票”“杭州有什么景点”“上海适合亲子的景点”“西湖附近的景点”等需求。该工具只查询和展示景点与票价，不执行购票、支付或退票。\n\n返回规则（网关侧）：\n- 一条卡片 = 一个景点，景点里内嵌票种列表（成人票 / 儿童票 / 亲子票等），票种按携程返回顺序；默认展示前 3 个景点，用户要多看时传 limit=10（或不限传 limit=0，一次通常约 10 个景点）。\n- 部分景点没有在售票种（只有景点信息没有票价），这是正常返回，不要当成失败；这类景点可以引导用户点卡片进携程看。\n- 传了 keyword 时携程只回一条列表页链接，卡片没有景点明细，网关会给出“查看更多门票”按钮；要景点和票价就别传 keyword。\n\n## 参数限制\n1. scenicSpotName 与 cityName 至少传一个，两个都不传网关直接拒绝（不会调用携程）：只传景点名（如“故宫”）或只传城市（如“上海”）都能返回景点列表。\n2. keyword 是关键词模式，行为与其他条件不同：传了 keyword 只返回带关键词的 H5 列表页链接（listKywdUrlH5），没有景点明细；城市不存在时同样只返回列表链接，不会报错。keyword 必须配合 cityName，只传 keyword 不传 cityName 网关直接拒绝。要拿到景点和票价明细，用 scenicSpotName 或 cityName，不要用 keyword。\n3. longitude / latitude 必须成对传（高德坐标）；只传其中一个网关会把它丢掉（携程也会忽略），不会报错。经纬度是“附近”类需求用的，用户没给坐标就不要编。\n4. sortType 取值 1～4（1 为默认排序），超出范围或非整数会被网关拒绝；group 是人群类型，一次只传一种（如“成人票”“儿童票”“老人票”“学生票”），传多个（带逗号、顿号、斜杠）会被网关拒绝。\n5. resourceSize 是每个景点返回的票种数量上限，必须是正整数，默认 10；在关键词模式下不生效。\n6. cityName 不要带“市”、provinceName 不要带“省”，网关会统一去掉后缀再发给携程。\n7. tag 是景点主题标签（如“亲子”），可用取值携程未给枚举，实测“亲子”会返回“查询无结果”；命中不到时如实告知并改用城市或景点名重查，不要反复试。\n8. 门票只到景点与票种级：不支持指定日期库存、不支持下单改签退票，用户问“明天还有票吗”时按票种上的可订状态与提示回答，具体日期库存请引导跳转携程页面确认。\n## 查询要求\n在需要多次查询的时候，请务必串行查询，不要并行查询。即使多个任务无关，也需要串行查询。\n只传本工具声明的字段，其他字段网关会直接丢弃；不要把证件号、手机号、银行卡号等个人信息放进任何参数。\n只依据返回内容回答，不要编造返回里没有的名称、价格、时间或链接；返回无结果时如实告知。",
+    "type": "旅游",
+    "capabilityType": "门票",
+    "callType": "MCP",
+    "authType": "",
+    "permission": "2",
+    "appVersion": "1.0.0",
+    "callingMethod": "CLOUD",
+    "timeout": "30",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "tag": {
+          "type": "string",
+          "description": "景点主题标签，例如“亲子”。与 cityName 组合使用；命中不到时返回无结果。"
+        },
+        "group": {
+          "type": "string",
+          "description": "人群类型，一次最多传一种，例如“成人票”“儿童票”“老人票”“学生票”。"
+        },
+        "limit": {
+          "type": "number",
+          "description": "卡片展示条数，网关本地截断，不发给携程。不传默认 3；传 0 表示不限。"
+        },
+        "keyword": {
+          "type": "string",
+          "description": "查询关键词，例如“迪士尼”。注意：传 keyword 时携程只返回带关键词的列表页链接（H5 与小程序），不返回景点明细；需要配合 cityName。要看景点和票价时不要用本字段。"
+        },
+        "cityName": {
+          "type": "string",
+          "description": "景点所属城市，标准中文名称，不包含“市”等后缀。与 scenicSpotName 至少传一个；只传城市返回该城市热门景点列表。"
+        },
+        "latitude": {
+          "type": "number",
+          "description": "景点纬度，高德坐标系；必须与 longitude 一起传，只传一个会被忽略。"
+        },
+        "sortType": {
+          "type": "number",
+          "description": "排序方式，取值 1～4，默认 1。"
+        },
+        "longitude": {
+          "type": "number",
+          "description": "景点经度，高德坐标系；必须与 latitude 一起传，只传一个会被忽略。"
+        },
+        "provinceName": {
+          "type": "string",
+          "description": "省份名称，不包含“省”等后缀，例如“浙江”。"
+        },
+        "resourceSize": {
+          "type": "number",
+          "description": "每个景点返回的门票资源数量上限，默认 10。关键词模式下不生效。"
+        },
+        "scenicSpotName": {
+          "type": "string",
+          "description": "景点名称，例如“上海迪士尼”“故宫”。与 cityName 至少传一个。传景点名返回该景点及其票种明细。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {}
+    },
+    "extra": {
+      "slaScene": ""
+    },
+    "slaScene": "",
+    "pendingApproval": null
+  },
+  {
     "abilityVersionId": 24839,
     "abilityId": 3120,
     "appName": "携程",
@@ -11456,6 +11538,338 @@
           "type": "boolean",
           "default": false,
           "description": "是否需要中转数据，可选字段，true：需要中转；false：不需要中转；默认值为false。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {}
+    },
+    "extra": {
+      "slaScene": ""
+    },
+    "slaScene": "",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 32514,
+    "abilityId": 3122,
+    "appName": "携程",
+    "appDesc": "携程航班搜索、酒店搜索、火车票搜索、景点搜索、旅行规划、旅行攻略",
+    "appSource": "EXTER_APP",
+    "packageName": null,
+    "appId": 489,
+    "toolUniqueName": "489_query_tour_1.0.0",
+    "name": "query_tour",
+    "tool_alias_for_agent": "query_tour",
+    "functionName": "",
+    "description": "查询携程跟团游产品。该工具根据目的地（城市、省、国家或大区，如“日本”“云南”“欧洲”）和可选的出发城市、游玩天数查询旅游产品，结果包含产品名称、封面图与图片列表、评分、可预订状态、天数/晚数、行程摘要（交通 / 住宿 / 餐食 / 游玩 / 团队服务 / 签证）、产品经理推荐语、标签、当前价格以及 App / H5 详情链接。\n\n适用于“上海出发去日本 6 天的团”“云南跟团游”“国庆想去泰国玩 5 天有什么团”“三亚有哪些跟团产品”等需求。该工具只查询和展示产品，不执行预订、支付或退改。\n\n实际返回里约一半不是跟团游：产品形态有跟团游、自由行、私家团三种，卡片第一个标签就是该产品的形态，介绍时按标签如实说明，不要把自由行说成跟团。\n\n一次最多返回 10 条产品，卡片默认只展示前 3 条；用户要多看时传 limit=10（或不限传 limit=0）。\n\n## 参数限制\n1. 硬性必填只有 destination（缺失网关直接返回“请提供目的地（城市、省、国家或大区）”，不会调携程）。\n2. departureCity 建议传用户所在城市；不传时携程默认按北京出发。城市名带不带「市」都能查，网关会统一去掉「市」后缀。\n3. days 必须是数字，例如 6（传 \"6\" 这种纯数字字符串网关会自动转成数字，传“六”“一周”这类非数字会被直接拒绝）。不传默认 2。days=0 或 1 也能返回结果；days 过大（如 30）通常无结果。天数是筛选偏好而不是硬约束，返回产品的实际天数可能不等于 days。\n4. 不存在的目的地返回“查询无结果”，不会报错；先检查目的地写法再重试，不要用同一个写法重复查询。\n5. 目的地只到城市 / 省 / 国家 / 大区级，不支持指定景点、酒店、航班或具体出行日期；用户提到具体日期时按天数查询，并告知发团日期在跳转后的携程页面选择。\n6. 不支持按价格、评分排序，也不支持筛选可预订状态；返回里带“暂不可预订”的产品要如实说明。\n7. 只依据返回内容介绍产品名称、价格、天数和链接，不要虚构产品、优惠或行程细节。\n## 查询要求\n在需要多次查询的时候，请务必串行查询，不要并行查询。即使多个任务无关，也需要串行查询。\n只传本工具声明的字段，其他字段网关会直接丢弃；不要把证件号、手机号、银行卡号等个人信息放进任何参数。\n只依据返回内容回答，不要编造返回里没有的名称、价格、时间或链接；返回无结果时如实告知。",
+    "type": "旅游",
+    "capabilityType": "攻略",
+    "callType": "MCP",
+    "authType": "",
+    "permission": "2",
+    "appVersion": "1.0.0",
+    "callingMethod": "CLOUD",
+    "timeout": "30",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "destination"
+      ],
+      "properties": {
+        "days": {
+          "type": "number",
+          "description": "游玩天数，数字类型（不要传字符串），例如 6。不传默认 2。作为偏好筛选，返回产品的实际天数可能不同。"
+        },
+        "limit": {
+          "type": "number",
+          "description": "卡片展示条数，网关本地截断，不发给携程。不传默认 3；传 0 表示不限。"
+        },
+        "destination": {
+          "type": "string",
+          "description": "目的地，可以是城市、省、国家或大区，例如“日本”“云南”“三亚”“欧洲”。必填。"
+        },
+        "departureCity": {
+          "type": "string",
+          "description": "出发城市，标准中文名称，建议不带“市”后缀；建议传用户 IP 对应城市，不传时携程默认“北京”。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {}
+    },
+    "extra": {
+      "slaScene": ""
+    },
+    "slaScene": "",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 32512,
+    "abilityId": 3123,
+    "appName": "携程",
+    "appDesc": "携程航班搜索、酒店搜索、火车票搜索、景点搜索、旅行规划、旅行攻略",
+    "appSource": "EXTER_APP",
+    "packageName": null,
+    "appId": 489,
+    "toolUniqueName": "489_query_bus_1.0.0",
+    "name": "query_bus",
+    "tool_alias_for_agent": "query_bus",
+    "functionName": "",
+    "description": "查询携程汽车票（长途客运）班次。该工具根据出发城市、到达城市和出发日期查询当天班次，结果包含班次号、车型、出发/到达城市与车站、发车时间、网关推算的到达时间、票价、可订状态以及班次级 H5 预订链接，另附整页列表的跳转链接。",
+    "type": "旅游",
+    "capabilityType": "门票",
+    "callType": "MCP",
+    "authType": "",
+    "permission": "2",
+    "appVersion": "1.0.0",
+    "callingMethod": "CLOUD",
+    "timeout": "30",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "to",
+        "date",
+        "from"
+      ],
+      "properties": {
+        "to": {
+          "type": "string",
+          "description": "到达城市或站点所在地，标准中文名称，不包含“市”等后缀，例如“杭州”；可以是“乌镇”这类景区名但可能无班次。必填。"
+        },
+        "date": {
+          "type": "string",
+          "description": "出发日期，格式 yyyy-MM-dd，例如 2026-10-01。必填，且不能早于今天；非法或过去日期携程返回无结果。"
+        },
+        "from": {
+          "type": "string",
+          "description": "出发城市，标准中文名称，不包含“市”等后缀，例如“上海”。必填。"
+        },
+        "limit": {
+          "type": "number",
+          "description": "卡片展示班次数，网关本地截断（按发车时间先后取前 N 班），不发给携程。不传默认 3；传 0 表示不限。"
+        },
+        "toStation": {
+          "type": "string",
+          "description": "到达车站名筛选，网关本地按 to_station_name 子串匹配，不发给携程，例如“汽车北站”。用户明确指定到达站时才传。"
+        },
+        "fromStation": {
+          "type": "string",
+          "description": "出发车站名筛选，网关本地按 from_station_name 子串匹配，不发给携程，例如“南站”“客运中心”。用户明确指定出发站时才传。"
+        },
+        "filterEndTime": {
+          "type": "string",
+          "description": "发车时段筛选的结束时刻，24 小时制 HH:mm，例如 12:00，含边界。必须与 filterStartTime 成对传。口语换算：凌晨 06:00、早上 09:00、上午 12:00、中午 13:00、下午 18:00、傍晚 19:00、晚上 24:00、“X 点前”→X:00、“X 点左右”→(X+1):00、“X 点后”→24:00。"
+        },
+        "filterStartTime": {
+          "type": "string",
+          "description": "发车时段筛选的开始时刻，24 小时制 HH:mm，例如 06:00。网关本地按发车时间筛选，不发给携程；必须与 filterEndTime 成对传。口语换算：凌晨 00:00、早上 05:00、上午 06:00、中午 11:00、下午 12:00、傍晚 16:00、晚上 18:00、“X 点后”→X:00、“X 点左右”→(X-1):00、“X 点前”→00:00。用户没提时间段就不传。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {}
+    },
+    "extra": {
+      "slaScene": ""
+    },
+    "slaScene": "",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 32518,
+    "abilityId": 3124,
+    "appName": "携程",
+    "appDesc": "携程航班搜索、酒店搜索、火车票搜索、景点搜索、旅行规划、旅行攻略",
+    "appSource": "EXTER_APP",
+    "packageName": null,
+    "appId": 489,
+    "toolUniqueName": "489_car_rental_1.0.0",
+    "name": "car_rental",
+    "tool_alias_for_agent": "car_rental",
+    "functionName": "",
+    "description": "查询携程租车信息。该工具根据取车城市（可选还车城市、取/还车时间、车型组、座位数）查询可租车型，结果按车型组分组（国内：经济型、舒适型、商务车、豪华型、SUV、小巴士、跑车、皮卡、房车；国际城市为紧凑型轿车、中型 SUV、敞篷车等更细的分组），每个车型包含车型名称、图片、品牌、车厢类型、驱动方式、燃油、变速箱、座位数、门数、排量、日租价，以及 H5 / App / 小程序的车型列表承接链接。\n\n适用于“上海租车”“国庆去三亚租个 SUV”“北京租车一天多少钱”“下周东京自驾想租车”“上海取车杭州还”“三亚租辆七座车”等需求。该工具只查询和展示车型与日租价，不执行下单、支付、取消或改期。\n\n返回规则（网关侧）：\n- 用户没有指定车型（不传 vehiclegroupIds）：按车型组出卡，每个组只出 1 款代表车型（优先 hot=true 的热门车型，没有则取该组第一款），组顺序按携程返回；默认展示前 3 个组。用户看中某一类后再带 vehiclegroupIds 查该组明细。\n- 用户指定了车型组（传 vehiclegroupIds）：返回该组内的车型列表，热门车型排前，默认展示前 3 款。\n- 传了 seat：先按座位数精确筛选，再按上面两条规则出卡；没有符合座位的车型组整组不出现。\n- 两种情况卡片都默认 3 张；用户要多看时传 limit=10（或不限传 limit=0，国内约 7～9 个组、国际城市约 20 个组）。\n\n## 参数限制\n1. 硬性必填只有 pickUpCity。城市必须是标准中文名且不带「市」等后缀：传「上海市」携程直接返回“参数不合法”，不会自动纠正。\n2. returnCity 不传默认与取车城市相同；异地还车才传。\n3. pickUpTime / returnTime 必须成对传或成对不传，格式 yyyy-MM-dd HH:mm:ss（当地时间）。不传时携程按默认规则：国内城市取车=次日 10:00、还车=取车+2 天；国际城市取车=10 天后 10:00、还车=取车+7 天。用户没说时间就不要编造，直接不传。\n4. 携程不校验时间先后与是否过期（过去时间、只传一个时间、还车早于取车都会照常返回数据），因此调用前必须自行保证：取车时间晚于当前、还车时间晚于取车时间。\n5. vehiclegroupIds 只接受车型组 ID，多个用英文逗号连接，网关不做名称换算，传中文名称（如“SUV”）或无效 ID 返回“查询无结果”，不会报错。用户的口语按下表换算：\n- 国内城市：经济 / 便宜 / 代步 / 小车 → 2；舒适 / 中级 → 3；商务车 / MPV / 保姆车 → 4；豪华 / 高端 → 5；SUV / 越野 / 城市越野 → 6；小巴 / 十几座 → 7；跑车 / 敞篷 → 9；皮卡 → 10；房车 → 11。\n- 国际城市（如东京、曼谷）：微型轿车 1000、小型轿车 1001、紧凑型轿车 12、中型轿车 13、标准型轿车 14、大型轿车 15、小型 SUV 16、紧凑型 SUV 17、中型 SUV 18、标准型 SUV 19、大型 SUV 20、豪华轿车 21、跑车 22、轿跑 23、皮卡 24、厢式货车 25、迷你商务车 26、小型 BUS 27、房车 28、旅行车 29、摩托车 30、豪华 SUV 31、高级 SUV 32、高级轿车 33、敞篷车 34、中型商务车 35、标准型商务车 36、大型商务车 37、高端车型 38、中小型轿车 39、MPV 40、中大型 SUV 41、其它 42。国际的“SUV”不确定尺寸时传 17,18,19。\n- 不传返回全部车型组。用户没有明确指定车型时不要猜，先不传，让用户从返回的车型组里挑。\n- 「七座」「五座」这类座位要求不要用车型组表达，改用 seat（见第 6 条）。\n6. seat 按座位数精确筛选，网关本地过滤、不发给携程；多个值用英文逗号连接，如 \"7\" 或 \"5,7\"。用户说“七座”传 seat=7、不传车型组（7 座车既有商务车也有 SUV）；说“7 座 SUV”传 vehiclegroupIds=6 + seat=7；说“5 座或 7 座”传 seat=5,7。用户没提座位就不传。筛选后无车型会返回无结果，如实告知并可建议去掉座位条件再查。\n7. 传了车型组仍可能只返回其中一部分（该时段无车的组不出现），不要把缺组当成错误。\n8. 国际城市可查（如东京），但部分城市（如曼谷、洛杉矶）当前无结果；无结果时先去掉 vehiclegroupIds / seat 再查一次，仍无结果就如实告知，并建议用户换邻近城市或放宽取还车日期。返回“取车城市无法识别或暂无租车服务”时同样按此处理，不要重复用同一城市查询。\n9. 取还车地点只到城市级：不支持指定门店、机场、火车站等具体取还点，用户提到“虹桥机场取车”时按城市（上海）查询，并告知具体门店在跳转后选择。\n10. 不支持儿童座椅、GPS 等增值服务筛选，也不支持按价格排序；用户有这类需求时如实说明可在跳转后的携程页面选择。\n11. 只依据返回内容介绍车型、日租价和链接，不要虚构车型名称、价格或优惠。\n## 查询要求\n在需要多次查询的时候，请务必串行查询，不要并行查询。即使多个任务无关，也需要串行查询。\n只传本工具声明的字段，其他字段网关会直接丢弃；不要把证件号、手机号、银行卡号等个人信息放进任何参数。\n只依据返回内容回答，不要编造返回里没有的名称、价格、时间或链接；返回无结果时如实告知。",
+    "type": "旅游",
+    "capabilityType": "租车",
+    "callType": "MCP",
+    "authType": "",
+    "permission": "2",
+    "appVersion": "1.0.0",
+    "callingMethod": "CLOUD",
+    "timeout": "30",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "pickUpCity"
+      ],
+      "properties": {
+        "seat": {
+          "type": "string",
+          "description": "座位数筛选，网关本地过滤，不发给携程。填整数座位数，多个用英文逗号连接，按精确座位数匹配，例如 \"7\"、\"5,7\"。用户说“七座 / 7 座车”传 \"7\"；“5 座或 7 座”传 \"5,7\"；没提座位不传。可与 vehiclegroupIds 同时使用（如 7 座 SUV：vehiclegroupIds=6、seat=7）。筛选后无车型返回无结果。"
+        },
+        "limit": {
+          "type": "number",
+          "description": "卡片条数上限，网关本地截断，不发给携程。不传默认 3；传 0 表示不限。未传 vehiclegroupIds 时限制车型组数（每组 1 款代表车）；传了 vehiclegroupIds 时限制该组车型数。"
+        },
+        "pickUpCity": {
+          "type": "string",
+          "description": "取车城市，标准中文名称，不包含“市”等后缀，例如“上海”而不是“上海市”（带后缀携程返回参数不合法）。必填。"
+        },
+        "pickUpTime": {
+          "type": "string",
+          "description": "取车当地时间，格式 yyyy-MM-dd HH:mm:ss，例如 2026-10-01 10:00:00。必须与 returnTime 同时传或同时不传；不传时携程按国内次日 10:00 / 国际 10 天后 10:00 取默认值。必须晚于当前时间。"
+        },
+        "returnCity": {
+          "type": "string",
+          "description": "还车城市，标准中文名称，不包含“市”等后缀；不传时默认与 pickUpCity 相同，仅异地还车时传。"
+        },
+        "returnTime": {
+          "type": "string",
+          "description": "还车当地时间，格式 yyyy-MM-dd HH:mm:ss。必须与 pickUpTime 同时传，且晚于 pickUpTime；不传时携程默认国内取车+2 天、国际取车+7 天。"
+        },
+        "vehiclegroupIds": {
+          "type": "string",
+          "description": "车型组 ID，多个用英文逗号连接，例如 \"6\" 或 \"4,11\"。只接受整数 ID，传名称或无效 ID 返回无结果；口语换算见描述第 5 条（国内：2 经济型/便宜、3 舒适型、4 商务车/七座/MPV、5 豪华型、6 SUV/越野、7 小巴士、9 跑车/敞篷、10 皮卡、11 房车；国际城市用 12～42 与 1000/1001）。用户没指定车型就不传，返回全部车型组。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {}
+    },
+    "extra": {
+      "slaScene": ""
+    },
+    "slaScene": "",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 32517,
+    "abilityId": 3125,
+    "appName": "携程",
+    "appDesc": "携程航班搜索、酒店搜索、火车票搜索、景点搜索、旅行规划、旅行攻略",
+    "appSource": "EXTER_APP",
+    "packageName": null,
+    "appId": 489,
+    "toolUniqueName": "489_query_content_1.0.0",
+    "name": "query_content",
+    "tool_alias_for_agent": "query_content",
+    "functionName": "",
+    "description": "查询携程攻略笔记（用户游记与攻略）。该工具根据查询词，或“城市/地区 + 关键词/出行场景”的组合查询相关笔记，结果包含笔记标题、封面图与图片列表、正文摘要、发布时间、作者名称与头像、点赞/阅读/评论数、关联 POI，以及 App / H5 详情链接和列表页链接。\n\n适用于“上海迪士尼攻略”“北京三日游怎么玩”“成都美食攻略”“杭州西湖骑行路线”“适合亲子的上海周边游”等需求。该工具只查询和展示攻略内容，不做预订。\n\n## 参数限制\n1. 没有单个永远必填字段，但必须满足以下组合之一，否则网关直接返回“请提供查询词 query，或用「城市 / 地区」搭配「关键词 / 出行场景」组合查询”，不会调用携程：\n- query（改写后的完整查询词，如“上海迪士尼”“北京三日游”）\n- region + scenarios\n- city + scenarios\n- region + keyword\n- city + keyword\n只传 city、只传 keyword、只传 scenarios、空参数都查不到。\n2. 优先用 query 一个字段表达用户意图；多个 keyword / region / scenarios 用英文逗号分隔，网关会自动去空去重。\n3. size 是携程返回数量上限，数字类型，只接受 1～10（不传时携程按 10 返回）。传 0、11、100 这类越界值网关直接拒绝并提示“size 需要在 1～10 之间”，不会调用携程；传非数字（如“十条”）会返回参数错误。\n4. 不存在的地点返回“未找到相关内容信息”，不报错。\n5. 卡片默认只展示前 3 条；用户要多看时传 limit=10（或不限传 limit=0，上限就是 size 条）。\n6. query 必须包含地点（城市、景区或地区）：用户只说“亲子游攻略”“周末去哪玩”这类没有地点的需求时，先问清目的地，或用 city/region + scenarios 组合，不要拼一个没有地点的 query。\n7. city 用标准中文名且不要带“市”后缀（网关会统一去掉尾部“市”后再查询与回显）。\n8. 返回的正文只有前 120 字摘要（携程原文中位 4000 字以上、最长 3 万字，网关在入口就截断），需要全文时引导用户点卡片里的“查看攻略”链接，不要假装读过全文。\n9. 笔记分“图文”和“视频”两类，卡片上有标签；视频类笔记摘要往往很短甚至只有话题标签，不要据此判断内容质量。\n10. 只依据返回的笔记标题、摘要和链接回答，无结果时不要编造攻略内容、路线或链接。\n## 查询要求\n在需要多次查询的时候，请务必串行查询，不要并行查询。即使多个任务无关，也需要串行查询。\n只传本工具声明的字段，其他字段网关会直接丢弃；不要把证件号、手机号、银行卡号等个人信息放进任何参数。\n只依据返回内容回答，不要编造返回里没有的名称、价格、时间或链接；返回无结果时如实告知。",
+    "type": "旅游",
+    "capabilityType": "攻略",
+    "callType": "MCP",
+    "authType": "",
+    "permission": "2",
+    "appVersion": "1.0.0",
+    "callingMethod": "CLOUD",
+    "timeout": "30",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "城市名称，标准中文名且不包含“市”等后缀（网关回显时会统一去掉尾部“市”）。必须与 keyword 或 scenarios 同传，单独传查不到。"
+        },
+        "size": {
+          "type": "number",
+          "description": "携程返回条数上限，只接受 1～10，不传时携程按 10 返回；传 100 这类越界值网关直接拒绝，不会调用携程。"
+        },
+        "limit": {
+          "type": "number",
+          "description": "卡片展示条数，网关本地截断，不发给携程。不传默认 3；传 0 表示不限（最多就是 size 条）。"
+        },
+        "query": {
+          "type": "string",
+          "description": "改写后的完整查询词，例如“上海迪士尼”“北京三日游”。单独可用，优先使用本字段。必须包含地点（城市、景区或地区）：用户只说“亲子游攻略”这类没有地点的需求时先问清目的地，不要拼一个没有地点的 query。"
+        },
+        "region": {
+          "type": "string",
+          "description": "地区名称，多个用英文逗号分隔，例如“江浙沪”“云南”。必须与 keyword 或 scenarios 同传，单独传查不到。"
+        },
+        "keyword": {
+          "type": "string",
+          "description": "关键词，多个用英文逗号分隔，例如“亲子,迪士尼”。必须与 city 或 region 同传，单独传查不到。"
+        },
+        "scenarios": {
+          "type": "string",
+          "description": "出行场景，多个用英文逗号分隔，例如“亲子”“周末游”“情侣”。必须与 city 或 region 同传，单独传查不到。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {}
+    },
+    "extra": {
+      "slaScene": ""
+    },
+    "slaScene": "",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 32513,
+    "abilityId": 3126,
+    "appName": "携程",
+    "appDesc": "携程航班搜索、酒店搜索、火车票搜索、景点搜索、旅行规划、旅行攻略",
+    "appSource": "EXTER_APP",
+    "packageName": null,
+    "appId": 489,
+    "toolUniqueName": "489_query_rank_1.0.0",
+    "name": "query_rank",
+    "tool_alias_for_agent": "query_rank",
+    "functionName": "",
+    "description": "查询携程榜单。该工具根据榜单类型（美食 / 酒店 / 景点 / 目的地）和城市或月份查询榜单及上榜项，结果包含榜单标题、副标题、描述、主题、封面和榜单详情链接，以及每个上榜项的排名、名称和推荐理由（上榜项本身没有单独的链接、图片、价格和评分）。",
+    "type": "旅游",
+    "capabilityType": "攻略",
+    "callType": "MCP",
+    "authType": "",
+    "permission": "2",
+    "appVersion": "1.0.0",
+    "callingMethod": "CLOUD",
+    "timeout": "30",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "chartType"
+      ],
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "城市名称，标准中文名，不包含“市”等后缀，例如“重庆”“上海”“东京”。chartType 为 美食 / 酒店 / 景点 时必填；目的地榜携程忽略该字段，不用传。"
+        },
+        "size": {
+          "type": "number",
+          "description": "每个榜单返回的上榜项数量，数字类型，取值 1～10，默认 5。"
+        },
+        "limit": {
+          "type": "number",
+          "description": "卡片展示条数（限榜单数），网关本地截断，不发给携程。不传默认 3；传 0 表示不限。"
+        },
+        "month": {
+          "type": "string",
+          "description": "月份，字符串类型，取值“1”～“12”，例如“10”。只对 chartType=目的地 有意义（按月份选目的地榜版本），不传则返回默认版本。"
+        },
+        "locale": {
+          "type": "string",
+          "description": "语言，默认 zh-CN；可选 en-US、zh-HK、ja-JP、ko-KR、th-TH。传 en-US 时 chartType 仍要传中文，返回英文榜单。"
+        },
+        "chartType": {
+          "type": "string",
+          "description": "榜单类型，必填。只接受这四个中文值：美食、酒店、景点、目的地。英文（restaurant/hotel/sight/district）、带“榜”字（美食榜）都不认。"
+        },
+        "themelabel": {
+          "type": "string",
+          "description": "榜单主题标签，例如“必打卡”“奢华”。可选；命中时只返回该主题的 1 个榜单，不命中返回无结果。"
         }
       }
     },
@@ -18631,6 +19045,127 @@
       "slaScene": ""
     },
     "slaScene": "",
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 32485,
+    "abilityId": 4369,
+    "appName": "携程",
+    "appDesc": "携程航班搜索、酒店搜索、火车票搜索、景点搜索、旅行规划、旅行攻略",
+    "appSource": "EXTER_APP",
+    "packageName": null,
+    "appId": 489,
+    "toolUniqueName": "489_custom_tour_1.0.0",
+    "name": "custom_tour",
+    "tool_alias_for_agent": "custom_tour",
+    "functionName": "",
+    "description": "生成携程定制跟团游需求卡片。当用户想要定制行程、找旅行顾问帮忙规划，或明确说“定制”“私人定制”“帮我安排/规划一趟旅行”“不想自己做攻略”这类需求时使用。该工具不查询任何产品，只把用户已经说明的需求整理成一张卡片（目的地、出发地、天数、人数），卡片底部按钮「交给携程定制顾问」会把这些需求带到携程，由携程定制顾问跟进。\n\n适用于“帮我定制一个西班牙 10 天的行程，两个人，从上海出发”“想找人帮我规划云南的旅行”“国庆去日本玩一周，能不能定制”等需求。不适用于“有哪些跟团游产品”“多少钱”这类查询——那是 query_tour 的事。该工具只整理需求，不预订、不支付、不报价。\n\n卡片生成后，告诉用户需求已整理好、可以点击卡片按钮交给携程定制顾问；缺的项（出发地 / 天数 / 人数）卡片会标为“待补充”，可以顺带提醒用户补充，但不要为了补齐而反复追问。\n\n## 参数限制\n1. 硬性必填只有 destination（缺失网关直接返回“请提供目的地（城市、省、国家或大区）”）。目的地可以是城市、省、国家或大区，用户说了什么就传什么，不要把“西班牙+葡萄牙”拆开。\n2. departureCity、days、travelerCount 都是可选：用户没说就不传、不要猜、不要用默认值填。卡片会把没传的项显示为“待补充”。\n3. days 与 travelerCount 必须是数字，例如 10、2（传 \"10\" 这种纯数字字符串网关会自动转成数字，传“十”“一周”“两个人”这类非数字会被直接拒绝）。用户说“一周”就传 7，“两口子 / 一家三口”就传 2 / 3；0 视为没填。\n4. 出发城市带不带「市」都可以，网关会统一去掉「市」后缀。\n5. 用户提到的出发日期、预算、出行形式等其他信息，当前版本没有对应参数，不要塞进任何字段；可以在回复里告诉用户这些信息在跳转携程后补充。\n## 查询要求\n只传本工具声明的字段，其他字段网关会直接丢弃；不要把证件号、手机号、银行卡号等个人信息放进任何参数。\n该工具本地生成卡片、不调用携程接口，无需串行等待；但同一轮对话里同一份需求只生成一次，不要重复调用。\n只依据返回内容回答，不要编造卡片里没有的产品、价格、行程或顾问信息。",
+    "type": "旅游",
+    "capabilityType": "攻略",
+    "callType": "MCP",
+    "authType": "",
+    "permission": "2",
+    "appVersion": "1.0.0",
+    "callingMethod": "CLOUD",
+    "timeout": "30",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "destination"
+      ],
+      "properties": {
+        "days": {
+          "type": "number",
+          "description": "计划出行天数，数字类型（不要传字符串），例如 10。用户没说就不传。"
+        },
+        "destination": {
+          "type": "string",
+          "description": "目的地，可以是城市、省、国家或大区，例如“西班牙”“云南”“三亚”。必填。"
+        },
+        "departureCity": {
+          "type": "string",
+          "description": "出发城市，标准中文名称，建议不带“市”后缀。用户没说就不传。"
+        },
+        "travelerCount": {
+          "type": "number",
+          "description": "出行人数，数字类型（不要传字符串），例如 2。用户没说就不传。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {}
+    },
+    "extra": null,
+    "slaScene": null,
+    "pendingApproval": null
+  },
+  {
+    "abilityVersionId": 32516,
+    "abilityId": 4370,
+    "appName": "携程",
+    "appDesc": "携程航班搜索、酒店搜索、火车票搜索、景点搜索、旅行规划、旅行攻略",
+    "appSource": "EXTER_APP",
+    "packageName": null,
+    "appId": 489,
+    "toolUniqueName": "489_query_restaurant_1.0.0",
+    "name": "query_restaurant",
+    "tool_alias_for_agent": "query_restaurant",
+    "functionName": "",
+    "description": "查询携程餐馆信息。该工具根据城市（可结合关键词、菜系、美食林等级、语言）查询餐厅，结果包含餐厅名称、评分、点评数、菜系、人均价格（含当地币种）、地址、营业时段、招牌菜、美食林等级与标签，以及携程 App / H5 跳转链接。\n\n适用于“重庆有什么好吃的”“上海本帮菜推荐”“广州早茶哪家好”“东京寿司店”“成都川菜馆人均多少”等需求。该工具只查询和展示餐厅，不做预订。\n\n返回规则（网关侧）：\n- 卡片默认展示前 3 家；用户要多看时传 size=10 并传 limit=10（或不限传 limit=0，携程一次最多返回 10 家）。\n- 每张卡片是一家餐厅：名称、评分与点评数、菜系 · 人均 · 价位符号、地址、营业时段、营业状态与美食林标签、招牌菜前 3 道，以及携程 App / H5 落地链接。\n- 上游不返回餐厅图片、距离和推荐语，卡片不展示这些内容，也不要自行编造。\n\n## 参数限制\n1. city 硬性必填，缺失网关直接返回失败（携程报参数错误）；国内外城市均可查（东京、香港、曼谷等）。城市名不带「市」（网关会自动去掉后缀再查）；不存在的城市返回“查询无结果”。\n2. size 同样必填，且必须是 1～10 之间的数字：不传、传 0、传 11 网关直接返回失败（携程对这几种只回“请求失败”）；传数字字符串（\"5\"）网关会转成数字。默认填 5。\n3. cuisines 是菜系枚举，只接受携程定义的菜系名（已验证可用：川菜、粤菜、本帮菜、日本料理；“烤鸭”这类菜品名会返回“参数不合法”）。不确定时不要传 cuisines，改用 keyword。\n4. gourmetListType 是美食林等级枚举，已验证“全部”可用；“全部美食林”“美食林”“黑珍珠”“必吃榜”均返回“参数不合法”。不确定时不要传。\n5. keyword 可以是餐厅名或菜品关键词（如“小笼包”“早茶”），不命中时返回“请求失败”或无结果；这时换个关键词或去掉 keyword 再查，不要用同样的参数重复调用。\n6. locale 默认 zh-CN，可选 en-US、zh-HK、ja-JP、ko-KR、th-TH。日语 / 繁体下餐厅名、菜系、营业状态会是当地语言。\n7. 人均价格是当地币种（RMB / HKD / JPY），卡片已带币种符号，不要自行换算成人民币。\n## 查询要求\n在需要多次查询的时候，请务必串行查询，不要并行查询。即使多个任务无关，也需要串行查询。\n只传本工具声明的字段，其他字段网关会直接丢弃；不要把证件号、手机号、银行卡号等个人信息放进任何参数。\n只依据返回内容回答，不要编造返回里没有的名称、价格、时间或链接；返回无结果时如实告知。",
+    "type": "旅游",
+    "capabilityType": "攻略",
+    "callType": "MCP",
+    "authType": "",
+    "permission": "2",
+    "appVersion": "1.0.0",
+    "callingMethod": "CLOUD",
+    "timeout": "30",
+    "deviceType": "PHONE",
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "city",
+        "size"
+      ],
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "查询城市，标准中文名称，不包含“市”等后缀，例如“重庆”“上海”“东京”。必填。"
+        },
+        "size": {
+          "type": "number",
+          "description": "返回数量，数字类型，必须在 1～10 之间（不传或超范围携程请求失败）。默认填 5。"
+        },
+        "limit": {
+          "type": "number",
+          "description": "卡片展示条数，网关本地截断，不发给携程。不传默认 3；传 0 表示不限。"
+        },
+        "locale": {
+          "type": "string",
+          "description": "语言，默认 zh-CN；可选 en-US、zh-HK、ja-JP、ko-KR、th-TH。"
+        },
+        "keyword": {
+          "type": "string",
+          "description": "餐厅名称或菜品关键词，例如“小笼包”“早茶”“烤鱼”。不确定菜系枚举时用本字段。"
+        },
+        "cuisines": {
+          "type": "string",
+          "description": "菜系枚举，只接受携程定义的菜系名，例如“川菜”“粤菜”“本帮菜”“日本料理”；菜品名（如“烤鸭”）会返回参数不合法。不确定时不要传。"
+        },
+        "gourmetListType": {
+          "type": "string",
+          "description": "美食林等级枚举，已验证“全部”可用；其他取值（如“全部美食林”“黑珍珠”）当前返回参数不合法。不确定时不要传。"
+        }
+      }
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {}
+    },
+    "extra": null,
+    "slaScene": null,
     "pendingApproval": null
   }
 ]
