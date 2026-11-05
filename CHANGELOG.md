@@ -146,3 +146,15 @@
   - `query_rank`（携程）
   - `custom_tour`（携程）
   - `query_restaurant`（携程）
+
+## 2026-11-05
+
+- 新增 2 项
+  - `gallery_aicut_intelligent_search`（图库）
+  - `qqmusic_search_and_recommend`（QQ音乐）
+- 移除 5 项
+  - `proxy_third_party_ability_alipay_life_service`（通用原子能力）
+  - `proxy_third_party_ability_alipay_xui_service`（通用原子能力）
+  - `proxy_third_party_ability_capcut_creation`（通用原子能力）
+  - `proxy_third_party_ability_alipay_mcp_service`（通用原子能力）
+  - `proxy_third_party_ability_wechat_voice_control`（通用原子能力）

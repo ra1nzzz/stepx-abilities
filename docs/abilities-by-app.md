@@ -1,6 +1,6 @@
 # 原子能力明细（按 App 分组）
 
-快照时间：2026-11-01 09:08（UTC+8）　·　共 390 项能力 / 38 个 App
+快照时间：2026-11-05 09:05（UTC+8）　·　共 387 项能力 / 39 个 App
 
 > 入参 / 出参的完整 JSON Schema 见 `data/abilities.json`。
 
@@ -71,7 +71,7 @@
 
 ## 图库
 
-`com.stepos.media.gallery`　·　48 项能力　·　查看、管理照片及视频
+`com.stepos.media.gallery`　·　49 项能力　·　查看、管理照片及视频
 
 | 能力 | 说明 | 执行 | 鉴权 |
 |---|---|---|---|
@@ -82,6 +82,7 @@
 | `gallery_ai_erase_image` | 在图库中打开编辑并直接进入 **AI 消除**，路径支持本地绝对路径及 file://、content://。 ｜正例： - 帮我把这张照片里的路人消除掉 - 去掉图片里的杂物 - 把圈选区域的内容抹掉 - AI 消除这张图的瑕疵 - 帮我把水印擦掉 ｜反例： - 打开这张图片的完整编辑页，我自己修 → 应走 gall… | LOCAL | APP_SIGN |
 | `gallery_ai_extend_image` | 在图库中打开编辑并直接进入 **AI 扩图**，路径支持本地绝对路径及 file://、content://。 ｜正例： - 帮我把这张图做 AI 扩图 - 把这张照片往外延展一下 - 补全这张图的画面边缘 - 这张图太窄了，帮我加宽 - 给这张图生成更多背景 ｜反例： - 打开这张图片的完整编辑页，我自己修 → 应走… | LOCAL | APP_SIGN |
 | `gallery_ai_style_image` | 在图库中打开编辑并直接进入 **AI 风格/妙绘**，路径支持本地绝对路径及 file://、content://。 ｜正例： - 给这张照片做 AI 风格化 - 帮我把这张图变成动漫风 - 用 AI 妙绘改一下这张图 - 给图片换个艺术风格 - 做 AI 写真风格 ｜反例： - 打开这张图片的完整编辑页，我自己修 →… | LOCAL | APP_SIGN |
+| `gallery_aicut_intelligent_search` | 用自然语言对本地相册做语义智能搜索，并将结果投射到剪映「选择素材」桌面 Widget 展示，用于快速凑素材去创作；可限制最多返回条数。 ｜正例： - 剪映选素材：找海边的视频 - 给我一些风景素材去创作 - 挑几个有猫的片段用来剪辑 - 往选择素材组件里放点日落的画面 ｜反例： - 只是搜图、不需要投到剪映组件 → 应… | LOCAL | APP_SIGN |
 | `gallery_compress_media` | 在图库中压缩图片或视频，可设置压缩质量，输出路径以端侧为准。 ｜正例： - 帮我压缩这张图片 - 把这个视频压小一点 - 减小这张图的文件体积 - 降低画质省点空间 | LOCAL | APP_SIGN |
 | `gallery_copy_files_to_album` | 在图库中将用户指定的多个文件复制到指定目标相册。 ｜正例： - 把这些文件复制到目标相册 - 把选中的图片拷贝到宝宝相册 - 把这些图复制到旅行相册 | LOCAL | APP_SIGN |
 | `gallery_copy_media` | 在图库或存储中将指定媒体复制到目标路径，生成一份副本。 ｜正例： - 把这张照片复制一份到目标文件夹 - 把这个视频备份到我指定的目录 - 给这份媒体另存一份到别处 - 把这个文件拷贝到目标路径 | LOCAL | APP_SIGN |
@@ -126,7 +127,7 @@
 
 ## 通用原子能力
 
-`com.stepos.common.ability.proxy`　·　45 项能力　·　提供系统通用能力，应用开启及卸载、文件上传、获取设备及系统信息等
+`com.stepos.common.ability.proxy`　·　40 项能力　·　提供系统通用能力，应用开启及卸载、文件上传、获取设备及系统信息等
 
 | 能力 | 说明 | 执行 | 鉴权 |
 |---|---|---|---|
@@ -156,11 +157,6 @@
 | `open_app_by_name` | 根据应用显示名称打开应用，可选传入 Activity class name 打开具体 Activity。当前按系统应用列表中的显示名称忽略大小写匹配：优先完全匹配，未命中时按显示名前缀匹配以兼容简称（如“携程”命中“携程旅行”），多个命中时取显示名最短者；未找到应用、无默认启动入口或指定 Activity 启动失败时返… | LOCAL | APP_SIGN |
 | `open_app_by_package` | 根据 Android 应用包名打开应用；仅传 packageName 时启动该应用的默认入口 Activity，同时传 packageName 与 className 时直接启动指定 Activity。适用于用户明确提供包名或需要打开指定包名 Activity 的场景。 ｜正例： - 按包名打开应用 - 启动 com.… | LOCAL | APP_SIGN |
 | `open_url_with_browser` | 打开浏览器应用，并传入 URL 打开具体网页。url 必须以 http:// 或 https:// 开头；不支持缺少协议的地址、file:// 或本地路径。 ｜正例： - 用浏览器打开 https://www.baidu.com/ - 打开这个网页链接 - 帮我在浏览器里打开 URL ｜反例： - 打开浏览器应用 → … | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_alipay_life_service` | 支付宝「服务直达」原子能力入口 —— 覆盖智跃星辰服务直达 P0 场景，让用户在**支付宝**内 完成以下明确范围的生活服务。 ## 高频强支持意图（命中即强路由到本能力，勿让给地图/POI/外卖等其它 agent） 以下两类是高频核心场景，**只要 query 命中（含出现在复合 query 的任一子句里）就必须强路… | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_alipay_mcp_service` | 支付宝「对话内闭环」原子能力入口 —— 支付宝下发卡片，**卡片直接渲染在助手对话内、全程不跳转 支付宝**，用户在卡片上选规格 / 确认订单后由调用方回传，形成「推荐 → 下单 → 履约·核销状态查询」 的多轮闭环。 ## 优先级：本能力最高，命中即强路由 本能力覆盖的场景，与支付宝 xUI 服务执行（`proxy_… | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_alipay_xui_service` | 支付宝 xUI「服务执行」原子能力入口 ｜返回： 返回 [AlipayXuiServiceResult]：`code=0`（且 `_meta.metas` 中 `executionState=COMPLETED`）为执行成功； 10001/10002/10003/10004 入参非法（10004 为缺少有效 `para… | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_capcut_creation` | 剪映（CapCut）AI 创作原子能力入口 —— 让用户用一句话，由**剪映**创作 Agent 完成视频 / 图片 / 音乐等短视频创作，并把成片 / 草稿产物回传。命中以下创作意图时云端应路由到本能力，由剪映侧 创作 Agent 完成精准的创作模式判定与素材编排，工具层负责与剪映 App 建立会话、上传本地素材、 … | LOCAL | APP_SIGN |
-| `proxy_third_party_ability_wechat_voice_control` | 微信语音控制原子能力。Amoo 将用户原始语音以 16kHz/单声道/PCM16 传入，由微信完成联系人识别、 消息内容理解、确认 UI 和消息/音视频电话执行。本能力按 contextId 维持多轮 OVC Session；返回的 content 应由 Amoo 使用 TTS 播报。只适用于发微信消息、微信语音电话和… | LOCAL | APP_SIGN |
 | `set_back_screen_auto_brightness` | 打开或关闭背屏自动背光。打开后按环境光自动调节；关闭后使用手动亮度。 ｜正例： - 打开背屏自动亮度 - 关掉副屏自动背光 ｜反例： - 查询自动背光状态 → 应走 get_back_screen_auto_brightness - 把背屏调亮/调暗到具体数值 → 应走 set_back_screen_brightne… | LOCAL | APP_SIGN |
 | `set_back_screen_auto_rotate` | 打开或关闭背屏横竖屏适配。打开后主屏亮起时背屏跟随设备姿态旋转。 ｜正例： - 打开背屏自动旋转 - 关掉副屏横竖屏适配 ｜反例： - 查询横竖屏适配状态 → 应走 get_back_screen_auto_rotate | LOCAL | APP_SIGN |
 | `set_back_screen_basic_type` | 设置背屏待机显示。type=agent 默认动画，time 时间，text 自定义文本。选 text 时必须同时传 text。内置字库仅支持大写 A-Z、数字 0-9 以及 ! - ? 空格共 40 个字符（小写会自动转大写）。含中文时本能力会改走 set_back_screen_frame 点阵显示，最多 6 个字。… | LOCAL | APP_SIGN |
@@ -661,3 +657,11 @@
 | 能力 | 说明 | 执行 | 鉴权 |
 |---|---|---|---|
 | `caiyue-ai-chat` | 财联社/财跃（AI小财神）金融信息查询与分析：支持个股基础行情（股价、涨跌幅、成交量、市值）、K线数据、个股及行业新闻、券商研报检索与摘要、基础财经知识问答和股票基础分析。 ## 何时调用 - 品牌触发：财联社、财跃、财跃AI、AI财跃、AI小财神（含带空格写法）、小财神。用户点名这些品牌查询上述金融信息，或要求分析、… | CLOUD | - |
+
+## QQ音乐
+
+云端服务　·　1 项能力　·　QQ音乐MCP
+
+| 能力 | 说明 | 执行 | 鉴权 |
+|---|---|---|---|
+| `qqmusic_search_and_recommend` | 根据用户输入的歌名、歌手、关键词、心情、风格或场景，通过QQ音乐搜索或推荐歌曲，返回助手回复文本和歌曲结果，包括歌曲名称、歌手等信息。 - 适用于按歌名、歌手搜索歌曲，以及根据心情、风格、场景进行自然语言搜歌和荐歌。 - 调用时，query应保留用户完整的音乐需求，包括歌名、歌手、数量、风格、场景及版本等要求，不要仅提… | CLOUD | - |
